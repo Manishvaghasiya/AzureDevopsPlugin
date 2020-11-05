@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Testing Whiz Report</title>
+    <link rel="stylesheet" href="css/nga.min.css">
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css'
+        integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/Chart.min.js" type="application/javascript"></script>
+    <script src="js/angular.min.js" type="application/javascript"></script>
+    <script src="js/angular-sanitize.min.js" type="application/javascript"></script>
+    <script src="js/angular-route.min.js" type="application/javascript"></script>
+    <script src="js/angular-animate.min.js" type="application/javascript"></script>
+    <script src="js/smart-table.min.js" type="application/javascript"></script>
+    <script src="data/results.js" type="text/javascript"></script>
+    <script src="data/label.js" type="text/javascript"></script>
+    <script src="js/controllers.js" type="application/javascript"></script>
+</head>
+
+<body>
+    <div class="cf" ng-controller="PageController">
+        <div id="sideBar" ng-controller="MenuController" ng-class="{'open':menuCollapse}"> <span
+                class="icon icon-menu menu" ng-click="menuCollapse = !menuCollapse"></span>
+            <h2 class="projectTitle"><a href="#/" ng-click="navSelect(null)" title="{{reportData.name}}"><i
+                        class="icon icon-project"></i>{{reportData.name}}</a></h2>
+            <div class="filter"> <span class="filterLabel bold">Show</span> <span title="All"
+                    class="filterNav allState cf" ng-click="filterNav()"
+                    ng-class="{'active' : filterNavActive === ''}">All</span> <span title="Pass" class="filterNav"
+                    ng-click="filterNav('passBage')" ng-class="{'active' : filterNavActive === 'passBage'}">Pass</span>
+                <span title="Fail" class="filterNav" ng-click="filterNav('failBage')"
+                    ng-class="{'active' : filterNavActive === 'failBage'}">Fail</span> <span title="Skip"
+                    class="filterNav" ng-click="filterNav('skipBage')"
+                    ng-class="{'active' : filterNavActive ==='skipBage'}">Skip</span> <span title="Not Run"
+                    class="filterNav" ng-click="filterNav('notRunBage')"
+                    ng-class="{'active' : filterNavActive == 'notRunBage'}">Not Run</span> </div>
+            <div class="sideBar-content" ng-style="{'height':(windowheight-98)+'px'}">
+                <ul class="suiteList">
+                    <li class="accordion-parrent" ng-repeat="suite in reportData.childObjects">
+                        <div class="bage" ng-class="[getBageName(suite.result.name), isNavActive('p_'+$index)]">
+                            <a href="#/suites/{{$index}}/" ng-dblclick="collapse = !collapse"
+                                ng-click="navSelect('p_'+$index)" class="bold"> <i class="icon icon-suite"></i>
+                                {{suite.name}} </a>
+                            <a href="javascript:void(0);" class="accordion-trigger icon" ng-model="collapse"
+                                ng-click="collapse = !collapse" ng-class="!collapse ? 'icon-up':'icon-down'"></a>
+                        </div>
+                        <ul class="caseList accordion-panel" ng-show="!collapse">
+                            <li ng-repeat="case in suite.childObjects">
+                                <div class="bage"
+                                    ng-class="[getBageName(case.result.name), isNavActive('p_'+$parent.$index+'_c_'+$index)]"
+                                    data-status="{{getBageName(case.result.name)}}"> <a
+                                        href="#/suite/{{$parent.$index}}/case/{{$index}}/"
+                                        ng-click="navSelect('p_'+$parent.$index+'_c_'+$index)"><i
+                                            class="icon icon-case"></i> {{case.name}}</a> </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <div id="mainpanel">
+            <div ng-style="{'height':(windowheight-40)+'px'}" class="scrollBlock">
+                <div ng-view></div>
+                <script type="text/ng-template" id="home.html">
+                    <div class="cf mt-20">
+                        <div class="border-box chart-box col">
+                            <div class="box-title">{{reportLang.projectSummary}}</div>
+                            <div class="box-content">
+                                <div class="tab-content nga-default nga-stagger nga-slide-down summary-content" ng-controller="SummaryChartController">
+                                    <div class="cf">
+                                        <div class="canvas-holder"> <span ng-if="suiteList.length > 0">						<canvas id="summaryChart" width="220" height="220"  chart-type="chartType"  chart-data="chartData" newchartjs />					</span>
+                                            <div class="graphError" ng-if="suiteList.length === undefined">{{reportLang.noSuiteGraph}}</div>
+                                        </div>
+                                        <div class="staticsDetail-holder">
+                                            <ul class="staticsDetail cf">
+                                                <li class="passState"> <label>{{reportLang.pass}}</label> <span class="number">{{chartResult[0]}}</span> </li>
+                                                <li class="failState"> <label>{{reportLang.fail}}</label> <span class="number">{{chartResult[1]}}</span> </li>
+                                                <li class="skipState"> <label>{{reportLang.skip}}</label> <span class="number">{{chartResult[2]}}</span> </li>
+                                                <li class="notState"> <label>{{reportLang.notRun}}</label> <span class="number">{{chartResult[3]}}</span> </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="chart-types">
+                                        <a href="javascript:void(0);" class="icon icon-pie-chart" ng-click="summaryPieChart()"></a>
+                                        <a href="javascript:void(0);" class="icon icon-bar-chart" ng-click="summaryBarChart()"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-box details-box col">
+                            <div class="box-title">{{reportLang.executionDetails}}<span class="subTitle"> {{reportData.metadata.reportDate}} {{reportData.metadata.reportTime}}</span></div>
+
+                            <div class="box-content scrollBlock">
+                                <ul class="descriptionList cf">
+                                    <li> <span class="label">{{reportLang.projectName}} :</span> <span class="value">{{reportData.name}}</span> </li>
+                                    <li class="odd"> <span class="label">OS &amp; {{reportLang.browser}} :</span> <span class="value">{{reportData.metadata.plateform}} <span ng-if="reportData.metadata.plateform != ''">,</span> {{reportData.metadata.browserName ? reportData.metadata.browserName
+                                        : 'N/A' }}</span>
+                                    </li>
+                                    <li> <span class="label">{{reportLang.executionTime}} (hh:mm:ss) :</span> <span class="value">{{reportData.result.executionTime | secondsToTimeString }}</span> </li>
+                                    <li class="odd"> <span class="label">{{reportLang.environment}} :</span> <span class="value">{{reportData.metadata.environment}}</span> </li>
+                                    <li> <span class="label">{{reportLang.rbtEnabled}} :</span> <span class="value">{{reportData.metadata.rbtEnabale | statusToI18N}}</span> </li>
+                                    <li class="odd"> <span class="label">{{reportLang.preparedBy}} :</span> <span class="value">{{reportData.metadata.preparedBy}}</span> </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-box table-holder">
+                        <div class="box-title">{{reportLang.suiteDetails}}</div>
+                        <div class="box-content scrollBlock">
+                            <table class="customTable" st-table="suiteList">
+                                <colgroup>
+                                    <col width="20%">
+                                    <col width="10%">
+                                    <col width="10%">
+                                    <col width="10%">
+                                    <col width="35%">
+                                    <col width="15%"> </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>{{reportLang.name}}</th>
+                                        <th>{{reportLang.durationMS}} (hh:mm:ss)</th>
+                                        <th>{{reportLang.priority}}</</th>
+                                            <th>{{reportLang.noOfTC}}</th>
+                                            <th>{{reportLang.description}}</th>
+                                            <th>{{reportLang.health}}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="suite in suiteList">
+                                        <td>
+                                            <div>{{suite.name}}</div>
+                                        </td>
+                                        <td>{{suite.result.executionTime | secondsToTimeString}}</td>
+                                        <td>{{suite.result.priority}}</td>
+                                        <td>{{suite.childObjects.length}}</td>
+                                        <td>{{suite.description}}</td>
+                                        <td>
+                                            <div class="progress">
+                                                <div class="progress-bar greenBg" ng-style="{'width':(suite.result.pass*100)/suite.childObjects.length+'%'}"> {{reportLang.pass}} </div>
+                                                <div class="progress-bar redBg" ng-style="{'width':(suite.result.fail*100)/suite.childObjects.length+'%'}"> {{reportLang.fail}} </div>
+                                                <div class="progress-bar greyBg" ng-style="{'width':(suite.result.skip*100)/suite.childObjects.length+'%'}"> {{reportLang.skip}} </div>
+                                                <div class="progress-bar blueBg" ng-style="{'width':(suite.result.notRun*100)/suite.childObjects.length+'%'}"> {{reportLang.notRun}} </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="6">
+                                            <div st-pagination="" st-items-by-page="itemsByPage"></div>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </script>
+                <script type="text/ng-template" id="suite.html">
+                    <div class="cf  mt-20">
+                        <div class="border-box chart-box col">
+                            <div class="box-title">{{reportLang.suiteSummary}}</div>
+                            <div class="box-content">
+                                <div class="tab-content nga-default nga-stagger nga-slide-down summary-content" ng-controller="SummaryChartController">
+                                    <div class="cf">
+                                        <div class="canvas-holder"> <span ng-if="caseList.length > 0">					<canvas id="summaryChart" width="220" height="220"  chart-type="chartType"  chart-data="chartData" newchartjs />					</span>
+                                            <div class="graphError" ng-if="caseList.length === undefined">{{reportLang.noCaseGraph}}</div>
+                                        </div>
+                                        <div class="staticsDetail-holder">
+                                            <ul class="staticsDetail cf">
+                                                <li class="passState"> <label>{{reportLang.pass}}</label> <span class="number">{{chartResult[0]}}</span> </li>
+                                                <li class="failState"> <label>{{reportLang.fail}}</label> <span class="number">{{chartResult[1]}}</span> </li>
+                                                <li class="skipState"> <label>{{reportLang.skip}}</label> <span class="number">{{chartResult[2]}}</span> </li>
+                                                <li class="notState"> <label>{{reportLang.notRun}}</label> <span class="number">{{chartResult[3]}}</span> </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="chart-types">
+                                        <a href="javascript:void(0);" class="icon icon-pie-chart" ng-click="summaryPieChart()"></a>
+                                        <a href="javascript:void(0);" class="icon icon-bar-chart" ng-click="summaryBarChart()"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-box details-box col">
+                            <div class="box-title">{{reportLang.executionDetails}}</div>
+                            <div class="box-content scrollBlock">
+                                <ul class="descriptionList cf">
+                                    <li> <span class="label">{{reportLang.name}} :</span> <span class="value">{{suiteData.name}}</span> </li>
+                                    <li class="odd"> <span class="label">{{reportLang.executionTime}} (hh:mm:ss) :</span> <span class="value">{{suiteData.result.executionTime  | secondsToTimeString }}</span> </li>
+                                    <li> <span class="label">{{reportLang.priority}} :</span> <span class="value">{{suiteData.result.priority}}</span> </li>
+                                    <li class="odd"> <span class="label">{{reportLang.status}} :</span> <span class="value">{{suiteData.result.name | statusToI18N}}</span> </li>
+                                    <li> <span class="label">{{reportLang.noOfTestCase}} :</span> <span class="value">{{suiteData.childObjects.length}}</span> </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-box table-holder">
+                        <div class="box-title">{{reportLang.caseDetails}}</div>
+                        <div class="box-content scrollBlock">
+                            <div ng-if="caseList.length === undefined">{{reportLang.noTestCase}}</div>
+                            <div ng-if="caseList.length > 0">
+                                <table class="customTable" st-table="caseList">
+                                    <thead>
+                                        <tr>
+                                            <th>{{reportLang.name}}</th>
+                                            <th>{{reportLang.durationMS}} (hh:mm:ss)</th>
+                                            <th>{{reportLang.priority}}</th>
+                                            <th>{{reportLang.status}}</th>
+                                            <th>{{reportLang.description}}</th>
+                                            <th>{{reportLang.dependencyExecution}}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="case in caseList">
+                                            <td>{{case.name}}</td>
+                                            <td>{{case.result.executionTime | secondsToTimeString}}</td>
+                                            <td>{{case.result.priority}}</td>
+                                            <td>{{case.result.name | statusToI18N}}</td>
+                                            <td>{{case.result.description}}</td>
+                                            <td><span ng-if="case.result.suiteDependency != '[None]' && case.result.caseDependency != '[None]' 						&& case.result.caseDependency.length != 0">{{case.result.suiteDependency}} 						<i class='fas fa-long-arrow-alt-right'></i> {{case.result.caseDependency}}</span></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="5">
+                                                <div st-pagination="" st-items-by-page="itemsByPage"></div>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </script>
+                <script type="text/ng-template" id="case.html">
+                    <div class="cf mt-22 cf">
+                        <div class="border-box case-box">
+                            <div class="box-title">{{reportLang.caseDetails}}</div>
+                            <div class="box-content">
+                                <ul class="descriptionList cf caseDescriptionList">
+                                    <li class="caseName"> <span class="label">{{reportLang.name}} :</span> <span class="value">{{caseData.name}}</span> </li>
+                                    <li class="odd caseTime"> <span class="label">{{reportLang.executionTime}} (hh:mm:ss) :</span> <span class="value">{{caseData.result.executionTime | secondsToTimeString }}</span> </li>
+                                    <li> <span class="label">{{reportLang.priority}} :</span> <span class="value">{{caseData.result.priority}}</span> </li>
+                                    <li class="odd"> <span class="label">{{reportLang.status}} :</span> <span class="value">{{caseData.result.name | statusToI18N}}</span> </li>
+                                    <li ng-if="caseData.result.suiteDependency != '[None]' && caseData.result.caseDependency != '[None]' && caseData.result.caseDependency.length != 0">
+                                    <span class="label">{{reportLang.dependencyExecution}} :</span> <span ng-if="caseData.result.suiteDependency.length > 0" class="value">{{caseData.result.suiteDependency}} <i class='fas fa-long-arrow-alt-right'></i> {{caseData.result.caseDependency}}</span>                                        </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-box table-holder">
+                        <div style="display : inline">
+                            <div class="box-title clickBox" ng-model="stepCollapse" ng-click="stepCollapse = !stepCollapse">{{reportLang.steps}} <span class="icon step-collapse" ng-class="stepCollapse ? 'icon-up':'icon-down'"></span></div>
+                        </div>
+                        <div class="box-content scrollBlock commonScroll" ng-show="stepCollapse">
+                            <div ng-if="steps.length === undefined">{{reportLang.noTestSteps}}</div>
+                            <div class="stepList" ng-if="steps.length > 0">
+                                <div class="cf statusIndicate border-bottom head">
+                                    <div class="col stepnumber">{{reportLang.No}}</div>
+                                    <div class="col activityCol">{{reportLang.activity}}</div>
+                                    <div class="col activityOnCol">{{reportLang.on}}</div>
+                                    <div class="col valCol">{{reportLang.value}}</div>
+                                    <div class="col timeCol">{{reportLang.durationMS}} (ms)</div>
+                                    <div class="col decCol">{{reportLang.description}}</div>
+                                    <div class="col iconCol"></div>
+                                </div>
+                                <div ng-repeat="step in steps | limitTo:iniTemp" class="steps">
+                                    <div ng-if="checkIterartion(step.type,steps[$index - 1].type)" class="iteration-row-header">
+                                        <div class="tittle border-bottom bold">{{step.type}}</div>
+                                    </div>
+                                    <div ng-if="checkCallMethod(step.type,steps[$index - 1].type)" class="iteration-row-header">
+                                        <div class="tittle border-bottom">{{step.type}}</div>
+                                    </div>
+                                    <div class="cf border-bottom statusIndicate" ng-class="[getBageName(step.result.name), checkIterartionClass(step.type)]" ng-model="imgCollapse" ng-if="!checkIterartionIsBlank($index)">
+                                        <div class="col stepnumber">{{step.sequencenumber}}</div>
+                                        <div class="col activityCol">{{step.operation.displayName}} : {{step.action.displayName}}</div>
+                                        <div class="col activityOnCol">{{step.object}}</div>
+                                        <pre class="col valCol">{{step.value}}</pre>
+                                        <div class="col timeCol">{{step.executionTime}}</div>
+                                        <div class="col decCol">{{step.description}}</div>
+                                        <div class="col iconCol" ng-click="imgCollapse = !imgCollapse">
+                                            <a href="javascript:void(0)" ng-if="step.screenshotFile.length > 0" class="icon-image-trigger icon"></a>
+                                        </div>
+                                        <div class="image-block" ng-show="imgCollapse" ng-if="step.screenshotFile.length > 0"> <img ng-src="screenshots/{{step.screenshotFile | screenShotFileName}}" /> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sticky border-box table-holder">
+                        <div style="display : inline">
+                            <div class="box-title clickBox" ng-model="logCollapse" ng-click="logCollapse = !logCollapse">{{reportLang.log}} 
+                                <span class="icon log-collapse" ng-class="logCollapse ? 'icon-up':'icon-down'"></span> 
+                                <img ng-if="logFlag" src="css\image\log-e.svg" class="logClass" title="Download Logs" width="20" height="20" ng-click="expFile()">
+                                <img ng-if="!logFlag" src="css\image\log-d.svg" class="logClass" title="Download Logs" width="20" height="20">     
+                            </div>
+                        </div>
+                        <div class="box-content commonScroll" ng-show="logCollapse">
+                             <div ng-if="consoleLogsetting" >  {{reportLang.noconsolelogs}}  </div>
+                           <div ng-if="!consoleLogsetting">
+                          <div ng-if="!logFlag">{{reportLang.noLogs}} </div>
+                           <ul class="log-panel" >
+                               <li ng-repeat="step in steps">
+                                   <p ng-if="checkIterartion(step.type,steps[$index - 1].type)"> <span class="bold">  {{step.type}}</span> </p>
+                                   <p ng-if="checkCallMethod(step.type,steps[$index - 1].type)"> <span class="bold">  {{step.type}}</span> </p>
+                                   <div ng-if="isMessageColor(step.log)"> <pre ng-class="getLogTypeClass(step.log)" ng-bind-html="getMessageColor(step.sequencenumber, step.log)"></pre> </div>
+                                   <div ng-if="!isMessageColor(step.log)"> <pre ng-class="getLogTypeClass(step.log)" ng-if="step.log.length > 0"><b>Step # {{step.sequencenumber}} </b> {{step.log}}</pre> </div>
+                               </li>
+                           </ul>
+                         </div>
+                        </div>
+                    </div>
+                </script>
+            </div>
+            <div class="branding-section"> <span>{{reportLang.poweredBy}} <i class="icon icon-branding"></i></span>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

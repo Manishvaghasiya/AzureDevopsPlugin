@@ -1,0 +1,36 @@
+{
+    "manifestVersion": 1,
+    "id": "build-release-task",
+    "name": "TestingWhiz Plugin",
+    "version": "1.7.11",
+    "publisher": "CygnetInfotech",
+    "targets": [{
+        "id": "Microsoft.VisualStudio.Services"
+    }],
+    "description": "build/release task to Run UI test with Testingwhiz.",
+    "categories": [
+        "Azure Pipelines"
+    ],
+    "content": {
+        "details": {
+            "path": "overview.md"
+        }
+    },
+    "icons": {
+        "default": "images/extension-icon.png"
+    },
+    "public": true,
+    "files": [{
+        "path": "buildAndReleaseTask"
+    }],
+    "contributions": [{
+        "id": "custom-build-release-task",
+        "type": "ms.vss-distributed-task.task",
+        "targets": [
+            "ms.vss-distributed-task.tasks"
+        ],
+        "properties": {
+            "name": "buildAndReleaseTask"
+        }
+    }]
+}
