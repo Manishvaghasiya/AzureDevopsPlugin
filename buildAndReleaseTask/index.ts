@@ -15,38 +15,51 @@ async function run() {
         const input_targetType: string = task.getInput('targetType', false);
         const inputScriptFilePath: string = task.getInput('filePath',/*required*/ true);
         const inputScriptFolderPath: string = task.getInput('folderPath', /*required*/ true);
+        const inputStringTestObject: string = task.getInput('testObject', false);
         const reportDploy: string = task.getInput("reportDploy", true);
         const inputStringBrowser: string = task.getInput('browser', false);
         const inputStringStepExecutionInterval: string = task.getInput('stepExecutionInterval', false);
         const inputStringReportInterval: string = task.getInput('reportInterval', true);
         const inputCaptureFailureScreenshot: string = task.getInput('captureFailureScreenshot', false);
         const inputCaptureConditionFailureScreenshot: string = task.getInput('captureConditionFailureScreenshot', false);
+        const inputBooleanRBT: string = task.getInput('rbt', false);
+        const inputBooleanHigh: string = task.getInput('high', false);
+        const inputBooleanMedium: string = task.getInput('medium', false);
+        const inputBooleanLow: string = task.getInput('low', false);
         const inputPassFailPer: any = task.getInput("passFailPer", false);
         const agentWorkFolder = task.getVariable('Agent.RootDirectory');
         const TWreportTemplate = process.env.APPDATA + "\\TWTemplate";
-        const reportTemplatePath = agentWorkFolder + "\\_tasks\\TWExtension_937e4568-749e-40d0-9778-78156ef133d3\\1.7.11\\ReportTemplate";
+        const reportTemplatePath = agentWorkFolder + "\\_tasks\\TWExtension_937e4568-749e-40d0-9778-78156ef133d3\\1.7.12\\ReportTemplate";
 
         // // test environments
 
-        // const inputStringServerURL: string = 'http://182.71.119.142:4040/';
-        // const inputStringBaseURL: string = '';
+        // const inputStringServerURL: string = 'http://172.16.33.231:5050/';
+        // const inputStringBaseURL: string = 't';
         // const input_targetType: string = 'FILEPATH';
-        // const inputScriptFilePath: string = 'C:/Users/mbvaghasiya.CYGNET/Desktop/t.twizx';
+        // const inputScriptFilePath: string = 'C:/Users/mbvaghasiya.CYGNET/Desktop/rr.twizx';
         // const inputScriptFolderPath: string = '';
+        // const inputStringTestObject: string = '';
         // const reportDploy: string = 'C:/Users/mbvaghasiya.CYGNET/Desktop/Report';
         // const inputStringBrowser: string = 'Google Chrome';
         // const inputStringStepExecutionInterval: string = '2000';
         // const inputStringReportInterval: string = '5000';
         // const inputCaptureFailureScreenshot: string = 'true';
         // const inputCaptureConditionFailureScreenshot: string = 'true';
+        // const inputBooleanRBT: string = 'true';
+        // const inputBooleanHigh: string = 'false';
+        // const inputBooleanMedium: string = 'true';
+        // const inputBooleanLow: string = 'false';
         // const inputPassFailPer: any = '50';
         // const agentWorkFolder = task.getVariable('Agent.RootDirectory');
-        // const TWreportTemplate = 'E:/TW-REPO/testingwhiz/autotest-azuredevops/buildAndReleaseTask/ReportTemplate';
+        // const TWreportTemplate = 'E:/AzureDevopsPlugin/buildAndReleaseTask/ReportTemplate';
         // const reportTemplatePath = agentWorkFolder + "\\_tasks\\TWExtension_937e4568-749e-40d0-9778-78156ef133d3\\1.7.11\\ReportTemplate";
         await delay(2000);
 
         let token: any = '';
         let tmp: number = 0;
+        let high: boolean = false;
+        let medium: boolean = false;
+        let low: boolean = false;
         let checkServerUrl: any;
         let inputScriptPath: string;
         let inputFolderPath: string;
@@ -168,15 +181,20 @@ async function run() {
             } else {
                 console.log(' Script Path : ' + inputScriptPath);
             }
+            console.log(' Test Object : ' + inputStringBaseURL);
             console.log(' Report Path : ' + reportDployPlace);
             console.log(' Browser : ' + inputStringBrowser);
             if (inputPassFailPer) {
-                console.log(" Passing '%' : " + inputPassFailPer + " %");
+                console.log(" Passing '%' : " + inputPassFailPer + ' %');
             } else {
                 console.log(" Passing '%' : 0 %");
             }
-            console.log(" Capture Failure Screenshot : " + inputCaptureFailureScreenshot);
-            console.log(" Capture Condition Failure Screenshot : " + inputCaptureConditionFailureScreenshot);
+            console.log(' Capture Failure Screenshot : ' + inputCaptureFailureScreenshot);
+            console.log(' Capture Condition Failure Screenshot : ' + inputCaptureConditionFailureScreenshot);
+            console.log(' RBT enabled execution : ', inputBooleanRBT);
+            console.log(' High : ', inputBooleanHigh);
+            console.log(' Medium : ', inputBooleanMedium);
+            console.log(' Low : ', inputBooleanLow);
 
             //Process starts
             const isServerUp = await checkServer();
@@ -423,6 +441,21 @@ async function run() {
 
             async function setParamsForFile() {
 
+                if (inputBooleanRBT === 'true') {
+                    high = inputBooleanHigh === 'true';
+                    low = inputBooleanLow === 'true';
+                    medium = inputBooleanMedium === 'true';
+                } else {
+                    high = false;
+                    medium = false;
+                    low = false;
+                }
+
+                console.log('[RBT]', inputBooleanRBT,
+                    '[high]', high, '[medium]', medium,
+                    '[low]', low
+                );
+
                 let urlParam = inputStringServerURL + "params?token=" + token;
                 let stepInterval = await step_interval()
 
@@ -431,7 +464,7 @@ async function run() {
                     "interval": stepInterval,
                     "operatingSystem": "Windows",
                     "version": "",
-                    "TestObject": "",
+                    "TestObject": inputStringTestObject,
                     "reportPath": reportDployPlace,
                     "baseURL": inputStringBaseURL,
                     "isFailureScreenshot": inputCaptureFailureScreenshot,

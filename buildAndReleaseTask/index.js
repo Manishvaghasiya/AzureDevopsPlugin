@@ -44,31 +44,81 @@ var dir = require('node-dir');
 var copydir = require('copy-dir');
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var inputStringServerURL_1, inputStringBaseURL_1, input_targetType, inputScriptFilePath, inputScriptFolderPath, reportDploy_1, inputStringBrowser_1, inputStringStepExecutionInterval, inputStringReportInterval_1, inputCaptureFailureScreenshot_1, inputCaptureConditionFailureScreenshot_1, inputPassFailPer_1, agentWorkFolder, TWreportTemplate_1, reportTemplatePath_1, token_1, tmp_1, checkServerUrl_1, inputScriptPath_1, inputFolderPath_1, screenshotDirectory_1, progressResponse_1, reportInterimResponse_1, screenshotResponse_1, stepExecutionInterval_1, overallResult_1, passResult_1, failResult_1, skipResult_1, notRunResult_1, varClearReportInterval_1, resultCalc, singleFileExecutionThread, files, dirSize, i, error_1;
+        var inputStringServerURL_1, inputStringBaseURL_1, input_targetType, inputScriptFilePath, inputScriptFolderPath, inputStringTestObject_1, reportDploy_1, inputStringBrowser_1, inputStringStepExecutionInterval, inputStringReportInterval_1, inputCaptureFailureScreenshot_1, inputCaptureConditionFailureScreenshot_1, inputBooleanRBT_1, inputBooleanHigh_1, inputBooleanMedium_1, inputBooleanLow_1, inputPassFailPer_1, agentWorkFolder, TWreportTemplate_1, reportTemplatePath_1, token_1, tmp_1, high_1, medium_1, low_1, checkServerUrl_1, inputScriptPath_1, inputFolderPath_1, screenshotDirectory_1, progressResponse_1, reportInterimResponse_1, screenshotResponse_1, stepExecutionInterval_1, overallResult_1, passResult_1, failResult_1, skipResult_1, notRunResult_1, varClearReportInterval_1, resultCalc, singleFileExecutionThread, files, dirSize, i, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 18, , 19]);
-                    inputStringServerURL_1 = 'http://182.71.119.142:4040/';
-                    inputStringBaseURL_1 = '';
-                    input_targetType = 'FILEPATH';
-                    inputScriptFilePath = 'C:/Users/mbvaghasiya.CYGNET/Desktop/t.twizx';
-                    inputScriptFolderPath = '';
-                    reportDploy_1 = 'C:/Users/mbvaghasiya.CYGNET/Desktop/Report';
-                    inputStringBrowser_1 = 'Google Chrome';
-                    inputStringStepExecutionInterval = '2000';
-                    inputStringReportInterval_1 = '5000';
-                    inputCaptureFailureScreenshot_1 = 'true';
-                    inputCaptureConditionFailureScreenshot_1 = 'true';
-                    inputPassFailPer_1 = '50';
+                    inputStringServerURL_1 = task.getInput('serverURL', true);
+                    inputStringBaseURL_1 = task.getInput('baseURL', false);
+                    input_targetType = task.getInput('targetType', false);
+                    inputScriptFilePath = task.getInput('filePath', /*required*/ true);
+                    inputScriptFolderPath = task.getInput('folderPath', /*required*/ true);
+                    inputStringTestObject_1 = task.getInput('testObject', false);
+                    reportDploy_1 = task.getInput("reportDploy", true);
+                    inputStringBrowser_1 = task.getInput('browser', false);
+                    inputStringStepExecutionInterval = task.getInput('stepExecutionInterval', false);
+                    inputStringReportInterval_1 = task.getInput('reportInterval', true);
+                    inputCaptureFailureScreenshot_1 = task.getInput('captureFailureScreenshot', false);
+                    inputCaptureConditionFailureScreenshot_1 = task.getInput('captureConditionFailureScreenshot', false);
+                    inputBooleanRBT_1 = task.getInput('rbt', false);
+                    inputBooleanHigh_1 = task.getInput('high', false);
+                    inputBooleanMedium_1 = task.getInput('medium', false);
+                    inputBooleanLow_1 = task.getInput('low', false);
+                    inputPassFailPer_1 = task.getInput("passFailPer", false);
                     agentWorkFolder = task.getVariable('Agent.RootDirectory');
-                    TWreportTemplate_1 = 'E:/TW-REPO/testingwhiz/autotest-azuredevops/buildAndReleaseTask/ReportTemplate';
-                    reportTemplatePath_1 = agentWorkFolder + "\\_tasks\\TWExtension_937e4568-749e-40d0-9778-78156ef133d3\\1.7.11\\ReportTemplate";
+                    TWreportTemplate_1 = process.env.APPDATA + "\\TWTemplate";
+                    reportTemplatePath_1 = agentWorkFolder + "\\_tasks\\TWExtension_937e4568-749e-40d0-9778-78156ef133d3\\1.7.12\\ReportTemplate";
+                    // // test environments
+                    // const inputStringServerURL: string = 'http://172.16.33.231:5050/';
+                    // const inputStringBaseURL: string = 't';
+                    // const input_targetType: string = 'FILEPATH';
+                    // const inputScriptFilePath: string = 'C:/Users/mbvaghasiya.CYGNET/Desktop/rr.twizx';
+                    // const inputScriptFolderPath: string = '';
+                    // const inputStringTestObject: string = '';
+                    // const reportDploy: string = 'C:/Users/mbvaghasiya.CYGNET/Desktop/Report';
+                    // const inputStringBrowser: string = 'Google Chrome';
+                    // const inputStringStepExecutionInterval: string = '2000';
+                    // const inputStringReportInterval: string = '5000';
+                    // const inputCaptureFailureScreenshot: string = 'true';
+                    // const inputCaptureConditionFailureScreenshot: string = 'true';
+                    // const inputBooleanRBT: string = 'true';
+                    // const inputBooleanHigh: string = 'false';
+                    // const inputBooleanMedium: string = 'true';
+                    // const inputBooleanLow: string = 'false';
+                    // const inputPassFailPer: any = '50';
+                    // const agentWorkFolder = task.getVariable('Agent.RootDirectory');
+                    // const TWreportTemplate = 'E:/AzureDevopsPlugin/buildAndReleaseTask/ReportTemplate';
+                    // const reportTemplatePath = agentWorkFolder + "\\_tasks\\TWExtension_937e4568-749e-40d0-9778-78156ef133d3\\1.7.11\\ReportTemplate";
                     return [4 /*yield*/, q_1.delay(2000)];
                 case 1:
+                    // // test environments
+                    // const inputStringServerURL: string = 'http://172.16.33.231:5050/';
+                    // const inputStringBaseURL: string = 't';
+                    // const input_targetType: string = 'FILEPATH';
+                    // const inputScriptFilePath: string = 'C:/Users/mbvaghasiya.CYGNET/Desktop/rr.twizx';
+                    // const inputScriptFolderPath: string = '';
+                    // const inputStringTestObject: string = '';
+                    // const reportDploy: string = 'C:/Users/mbvaghasiya.CYGNET/Desktop/Report';
+                    // const inputStringBrowser: string = 'Google Chrome';
+                    // const inputStringStepExecutionInterval: string = '2000';
+                    // const inputStringReportInterval: string = '5000';
+                    // const inputCaptureFailureScreenshot: string = 'true';
+                    // const inputCaptureConditionFailureScreenshot: string = 'true';
+                    // const inputBooleanRBT: string = 'true';
+                    // const inputBooleanHigh: string = 'false';
+                    // const inputBooleanMedium: string = 'true';
+                    // const inputBooleanLow: string = 'false';
+                    // const inputPassFailPer: any = '50';
+                    // const agentWorkFolder = task.getVariable('Agent.RootDirectory');
+                    // const TWreportTemplate = 'E:/AzureDevopsPlugin/buildAndReleaseTask/ReportTemplate';
+                    // const reportTemplatePath = agentWorkFolder + "\\_tasks\\TWExtension_937e4568-749e-40d0-9778-78156ef133d3\\1.7.11\\ReportTemplate";
                     _a.sent();
                     token_1 = '';
                     tmp_1 = 0;
+                    high_1 = false;
+                    medium_1 = false;
+                    low_1 = false;
                     reportInterimResponse_1 = '';
                     stepExecutionInterval_1 = Number(inputStringStepExecutionInterval);
                     overallResult_1 = [];
@@ -353,6 +403,17 @@ function run() {
                                     return __generator(this, function (_a) {
                                         switch (_a.label) {
                                             case 0:
+                                                if (inputBooleanRBT_1 === 'true') {
+                                                    high_1 = inputBooleanHigh_1 === 'true';
+                                                    low_1 = inputBooleanLow_1 === 'true';
+                                                    medium_1 = inputBooleanMedium_1 === 'true';
+                                                }
+                                                else {
+                                                    high_1 = false;
+                                                    medium_1 = false;
+                                                    low_1 = false;
+                                                }
+                                                console.log('[RBT]', inputBooleanRBT_1, '[high]', high_1, '[medium]', medium_1, '[low]', low_1);
                                                 urlParam = inputStringServerURL_1 + "params?token=" + token_1;
                                                 return [4 /*yield*/, step_interval()];
                                             case 1:
@@ -362,7 +423,7 @@ function run() {
                                                         "interval": stepInterval,
                                                         "operatingSystem": "Windows",
                                                         "version": "",
-                                                        "TestObject": "",
+                                                        "TestObject": inputStringTestObject_1,
                                                         "reportPath": reportDployPlace,
                                                         "baseURL": inputStringBaseURL_1,
                                                         "isFailureScreenshot": inputCaptureFailureScreenshot_1,
@@ -554,16 +615,21 @@ function run() {
                                         else {
                                             console.log(' Script Path : ' + inputScriptPath_1);
                                         }
+                                        console.log(' Test Object : ' + inputStringBaseURL_1);
                                         console.log(' Report Path : ' + reportDployPlace);
                                         console.log(' Browser : ' + inputStringBrowser_1);
                                         if (inputPassFailPer_1) {
-                                            console.log(" Passing '%' : " + inputPassFailPer_1 + " %");
+                                            console.log(" Passing '%' : " + inputPassFailPer_1 + ' %');
                                         }
                                         else {
                                             console.log(" Passing '%' : 0 %");
                                         }
-                                        console.log(" Capture Failure Screenshot : " + inputCaptureFailureScreenshot_1);
-                                        console.log(" Capture Condition Failure Screenshot : " + inputCaptureConditionFailureScreenshot_1);
+                                        console.log(' Capture Failure Screenshot : ' + inputCaptureFailureScreenshot_1);
+                                        console.log(' Capture Condition Failure Screenshot : ' + inputCaptureConditionFailureScreenshot_1);
+                                        console.log(' RBT enabled execution : ', inputBooleanRBT_1);
+                                        console.log(' High : ', inputBooleanHigh_1);
+                                        console.log(' Medium : ', inputBooleanMedium_1);
+                                        console.log(' Low : ', inputBooleanLow_1);
                                         return [4 /*yield*/, checkServer()];
                                     case 15:
                                         isServerUp = _a.sent();

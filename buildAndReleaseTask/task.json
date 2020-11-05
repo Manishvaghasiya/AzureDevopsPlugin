@@ -9,7 +9,7 @@
     "version": {
         "Major": 1,
         "Minor": 7,
-        "Patch": 11
+        "Patch": 12
     },
     "instanceNameFormat": "TestingWhiz Plugin",
     "inputs": [{
@@ -57,6 +57,14 @@
             "required": true,
             "defaultValue": "",
             "helpMarkDown": "Path of the TestingWhiz automation script Folder."
+        },
+        {
+            "name": "testObject",
+            "type": "string",
+            "label": "Test Object",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Choose perticuler testcase to run"
         },
         {
             "name": "reportDploy",
@@ -120,7 +128,43 @@
             "required": false,
             "defaultValue": "false",
             "helpMarkDown": "It will capture screenshot when conditional test step returns false."
+        },
+        {
+            "name": "rbt",
+            "type": "boolean",
+            "label": "RBT enabled execution",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "Prioritize test cases execution as per business requirement"
+        },
+        {
+            "name": "high",
+            "type": "boolean",
+            "label": "High",
+            "visibleRule": "rbt = true",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "High prioritize test cases execution as per business requirement"
+        },
+        {
+            "name": "medium",
+            "type": "boolean",
+            "label": "Medium",
+            "visibleRule": "rbt = true",
+            "required": false,
+            "defaultValue": "true",
+            "helpMarkDown": "Medium mrioritize test cases execution as per business requirement"
+        },
+        {
+            "name": "low",
+            "type": "boolean",
+            "label": "Low",
+            "visibleRule": "rbt = true",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "Low prioritize test cases execution as per business requirement"
         }
+
     ],
 
     "execution": {
