@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 let dir = require('node-dir');
 let copydir = require('copy-dir');
+var zipdir = require('zip-dir');
 
 async function run() {
 
@@ -22,6 +23,7 @@ async function run() {
         const inputStringReportInterval: string = task.getInput('reportInterval', true);
         const inputCaptureFailureScreenshot: string = task.getInput('captureFailureScreenshot', false);
         const inputCaptureConditionFailureScreenshot: string = task.getInput('captureConditionFailureScreenshot', false);
+        const inputMailReport: string = task.getInput('mailReport', false);
         const inputBooleanRBT: string = task.getInput('rbt', false);
         const inputBooleanHigh: string = task.getInput('high', false);
         const inputBooleanMedium: string = task.getInput('medium', false);
@@ -29,34 +31,13 @@ async function run() {
         const inputPassFailPer: any = task.getInput("passFailPer", false);
         const agentWorkFolder = task.getVariable('Agent.RootDirectory');
         const TWreportTemplate = process.env.APPDATA + "\\TWTemplate";
-        const reportTemplatePath = agentWorkFolder + "\\_tasks\\TWExtension_937e4568-749e-40d0-9778-78156ef133d3\\1.7.12\\ReportTemplate";
-
-        // // test environments
-
-        // const inputStringServerURL: string = 'http://172.16.33.231:5050/';
-        // const inputStringBaseURL: string = 't';
-        // const input_targetType: string = 'FILEPATH';
-        // const inputScriptFilePath: string = 'C:/Users/mbvaghasiya.CYGNET/Desktop/rr.twizx';
-        // const inputScriptFolderPath: string = '';
-        // const inputStringTestObject: string = '';
-        // const reportDploy: string = 'C:/Users/mbvaghasiya.CYGNET/Desktop/Report';
-        // const inputStringBrowser: string = 'Google Chrome';
-        // const inputStringStepExecutionInterval: string = '2000';
-        // const inputStringReportInterval: string = '5000';
-        // const inputCaptureFailureScreenshot: string = 'true';
-        // const inputCaptureConditionFailureScreenshot: string = 'true';
-        // const inputBooleanRBT: string = 'true';
-        // const inputBooleanHigh: string = 'false';
-        // const inputBooleanMedium: string = 'true';
-        // const inputBooleanLow: string = 'false';
-        // const inputPassFailPer: any = '50';
-        // const agentWorkFolder = task.getVariable('Agent.RootDirectory');
-        // const TWreportTemplate = 'E:/AzureDevopsPlugin/buildAndReleaseTask/ReportTemplate';
-        // const reportTemplatePath = agentWorkFolder + "\\_tasks\\TWExtension_937e4568-749e-40d0-9778-78156ef133d3\\1.7.11\\ReportTemplate";
+        const reportTemplatePath = agentWorkFolder + "\\_tasks\\TWExtension_937e4568-749e-40d0-9778-78156ef133d6\\11.0.0\\ReportTemplate";
         await delay(2000);
 
         let token: any = '';
         let tmp: number = 0;
+        let count: number = 0;
+        let rbt: boolean = false;
         let high: boolean = false;
         let medium: boolean = false;
         let low: boolean = false;
@@ -66,6 +47,7 @@ async function run() {
         let screenshotDirectory: string;
         let progressResponse: any;
         let reportInterimResponse: any = '';
+        let reportDployPlace: string = '';
         let screenshotResponse: any;
         let stepExecutionInterval = Number(inputStringStepExecutionInterval);
         let overallResult: Array<number> = [];
@@ -73,7 +55,8 @@ async function run() {
         let failResult: Array<number> = [];
         let skipResult: Array<number> = [];
         let notRunResult: Array<number> = [];
-        let varClearReportInterval: any;
+        let varClearInterval: any;
+        let reportFolderExtraPath: string = '';
 
         let resultCalc = async function () {
 
@@ -129,7 +112,8 @@ async function run() {
 
         //*********************** twizx file execution function start ***********************//
 
-        let singleFileExecutionThread = async function () {
+
+        let deployReportTemplate = async function (randomFolderNumber?: number) {
 
             const today = new Date();
             let dd: any = today.getDate();
@@ -137,9 +121,9 @@ async function run() {
             let yyyy = today.getFullYear();
             if (dd < 10) dd = '0' + dd;
             if (mm < 10) mm = '0' + mm;
-            const randomNumber = Math.floor(100000 + Math.random() * 900000)
-            const reportDployPlace = reportDploy + "\\Report_" + dd + mm + yyyy + "_" + randomNumber;
-
+            const randomNumber = Math.floor(100000 + Math.random() * 900000);
+            reportFolderExtraPath = randomFolderNumber ? '\\REPORT_FOLDER_' + randomFolderNumber : '';
+            reportDployPlace = reportDploy + reportFolderExtraPath + "\\Report_" + dd + mm + yyyy + "_" + randomNumber;
             if (!fs.existsSync(TWreportTemplate)) {
                 await copydir.sync(reportTemplatePath, TWreportTemplate);
                 await delay(2000);
@@ -167,6 +151,9 @@ async function run() {
                     });
                 }
             });
+        }
+
+        let singleFileExecutionThread = async function () {
 
             //Task Parameters
 
@@ -191,6 +178,7 @@ async function run() {
             }
             console.log(' Capture Failure Screenshot : ' + inputCaptureFailureScreenshot);
             console.log(' Capture Condition Failure Screenshot : ' + inputCaptureConditionFailureScreenshot);
+            console.log(' Send Report With Mail : ' + inputMailReport);
             console.log(' RBT enabled execution : ', inputBooleanRBT);
             console.log(' High : ', inputBooleanHigh);
             console.log(' Medium : ', inputBooleanMedium);
@@ -209,7 +197,7 @@ async function run() {
                     if (isparamResponseRecieved) {
 
                         const isScriptPlay = await runScript();
-                        varClearReportInterval = setInterval(reportGenerate, Number(inputStringReportInterval));
+                        varClearInterval = setInterval(screenshotGeneration, 1000);
                         console.log(" Executing Script File : " + inputScriptPath);
                         console.log("\n ========================== Script Execution Start ===========================");
                         console.log("\n Script  0 %  completed");
@@ -217,17 +205,17 @@ async function run() {
                         if (isScriptPlay) {
 
                             await process();
-                            await delay(1000);
+                            console.log(" Script  100 %  completed");
                             console.log("\n ========================== Script Execution End ===========================\n");
-                            clearInterval(varClearReportInterval);
                             await reportGenerate();
+                            clearInterval(varClearInterval);
                             await delay(Number(inputStringReportInterval));
                             let result = await reportInterimResponse.result;
                             let tmpPass = await result.pass;
                             let tmpFail = await result.fail;
                             let tmpSkip = await result.skip;
                             let tmpNotRun = await result.notRun;
-                            let totalCase = tmpPass + tmpFail + tmpSkip + tmpNotRun;
+                            let totalCase = tmpPass + tmpFail + tmpNotRun;
                             let passPercentage = tmpPass / totalCase * 100;
                             overallResult.push(passPercentage);
                             passResult.push(tmpPass);
@@ -285,12 +273,10 @@ async function run() {
 
 
             async function process() {
-
                 let progressLog = await progress_response();
-                await delay(2000);
                 if (progressLog && progressLog != undefined) {
                     if (progressLog.status == 'play') {
-                        await screenshotGeneration();
+                        await delay(5000);
                         if (progressLog.progress > tmp) {
                             console.log(" Script  " + progressLog.progress + " %  completed");
                         }
@@ -298,13 +284,18 @@ async function run() {
                         await process();
                     }
                 } else {
-                    await process();
+                    count++;
+                    if (count < 5) {
+                        await delay(2000);
+                        await process();
+                    } else {
+                        count = 0;
+                    }
                 }
             }
 
 
             async function reportGenerate() {
-
                 const isReportGenerate = await report_interim();
                 if ((isReportGenerate != undefined) && isReportGenerate) {
                     reportInterimResponse = await isReportGenerate;
@@ -323,7 +314,6 @@ async function run() {
 
 
             async function screenshotGeneration() {
-
                 const isScreenshotGenerateByte = await screenshot();
                 await isScreenshotGenerateByte;
                 if (isScreenshotGenerateByte) {
@@ -442,19 +432,16 @@ async function run() {
             async function setParamsForFile() {
 
                 if (inputBooleanRBT === 'true') {
+                    rbt = true;
                     high = inputBooleanHigh === 'true';
                     low = inputBooleanLow === 'true';
                     medium = inputBooleanMedium === 'true';
                 } else {
+                    rbt = false;
                     high = false;
                     medium = false;
                     low = false;
                 }
-
-                console.log('[RBT]', inputBooleanRBT,
-                    '[high]', high, '[medium]', medium,
-                    '[low]', low
-                );
 
                 let urlParam = inputStringServerURL + "params?token=" + token;
                 let stepInterval = await step_interval()
@@ -464,7 +451,11 @@ async function run() {
                     "interval": stepInterval,
                     "operatingSystem": "Windows",
                     "version": "",
-                    "TestObject": inputStringTestObject,
+                    "rbt": rbt,
+                    "high": high,
+                    "medium": medium,
+                    "low": low,
+                    "TestObject": inputStringTestObject || "",
                     "reportPath": reportDployPlace,
                     "baseURL": inputStringBaseURL,
                     "isFailureScreenshot": inputCaptureFailureScreenshot,
@@ -562,6 +553,24 @@ async function run() {
                 });
             }
         }
+
+        const convertReportToZIP = async () => {
+            if (inputMailReport === 'true') {
+                if (input_targetType.toUpperCase() == 'FILEPATH') {
+                    task.setVariable('reportDeployPath', reportDployPlace + '.zip');
+                    zipdir(reportDployPlace, { saveTo: reportDployPlace + '.zip' }, function (err: any, buffer: any) {
+                        // do something
+                    });
+                } else if (input_targetType.toUpperCase() == 'FOLDERPATH') {
+                    const folderPath: string = reportDploy + "\\" + reportFolderExtraPath
+                    task.setVariable('reportDeployPath', folderPath + '.zip');
+                    zipdir(folderPath, { saveTo: folderPath + '.zip' }, function (err: any, buffer: any) {
+                        // do something
+                    });
+                }
+            }
+        }
+
         //*********************** twizx file execution function end ***********************//
 
         if (!(inputPassFailPer <= 100 && inputPassFailPer >= 0)) {
@@ -580,14 +589,15 @@ async function run() {
                 throw new Error(inputScriptPath + " is Invalid File [ Only TWIZX/twizx file is accepted ] ");
             } else {
                 console.log("\n\n\n Task Configuration ");
-
+                await deployReportTemplate();
                 await singleFileExecutionThread();
-
+                await convertReportToZIP();
                 await resultCalc();
             }
         }
         else if (input_targetType.toUpperCase() == 'FOLDERPATH') {
             inputFolderPath = inputScriptFolderPath;
+            const randomNumber = Math.floor(100000 + Math.random() * 900000)
             let files = dir.files(inputFolderPath, { sync: true });
             const dirSize = files.length;
             await dirSize, files;
@@ -596,16 +606,14 @@ async function run() {
                 if (task.stats(files[i]).isFile() && files[i].toUpperCase().match(/\.TWIZX$/)) {
                     inputScriptPath = await files[i];
                     console.log("\n\n\n Task Configuration\n");
-
+                    await deployReportTemplate(randomNumber);
                     await singleFileExecutionThread();
-
                 } else {
-                    console.log(' Inavaid files are : ', files[i]);
+                    console.log(" Inavaid files are : ", files[i]);
                 }
             }
-
+            await convertReportToZIP();
             await resultCalc();
-
         }
     }
 

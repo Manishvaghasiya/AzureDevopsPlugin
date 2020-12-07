@@ -14,12 +14,12 @@
     "git-clone": "^0.1.0",
     "log-update": "^3.2.0",
     "node-dir": "^0.1.17",
-    "node-zip": "^1.1.1",
     "open": "^6.4.0",
     "replace-in-file": "^3.4.4",
     "simple-git": "^1.126.0",
     "tfx-cli": "^0.6.4",
-    "unzip-stream": "^0.3.0"
+    "unzip-stream": "^0.3.0",
+    "zip-dir": "^2.0.0"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",

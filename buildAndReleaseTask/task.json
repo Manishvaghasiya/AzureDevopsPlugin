@@ -1,5 +1,5 @@
 {
-    "id": "937e4568-749e-40d0-9778-78156ef133d3",
+    "id": "937e4568-749e-40d0-9778-78156ef133d6",
     "name": "TWExtension",
     "friendlyName": "Testingwhiz extension",
     "description": "build/release task to Run UI test with Testingwhiz",
@@ -7,9 +7,9 @@
     "category": "Utility",
     "author": "Cygnet Infotech",
     "version": {
-        "Major": 1,
-        "Minor": 7,
-        "Patch": 12
+        "Major": 11,
+        "Minor": 0,
+        "Patch": 0
     },
     "instanceNameFormat": "TestingWhiz Plugin",
     "inputs": [{
@@ -64,7 +64,7 @@
             "label": "Test Object",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Choose perticuler testcase to run"
+            "helpMarkDown": "Enter testcase name to run only that testcase"
         },
         {
             "name": "reportDploy",
@@ -130,6 +130,14 @@
             "helpMarkDown": "It will capture screenshot when conditional test step returns false."
         },
         {
+            "name": "mailReport",
+            "type": "boolean",
+            "label": "Mail Report ?",
+            "required": false,
+            "defaultValue": "false",
+            "helpMarkDown": "Send generated report to the mail"
+        },
+        {
             "name": "rbt",
             "type": "boolean",
             "label": "RBT enabled execution",
@@ -164,9 +172,12 @@
             "defaultValue": "false",
             "helpMarkDown": "Low prioritize test cases execution as per business requirement"
         }
-
     ],
-
+    "OutputVariables": [{
+            "name": "reportDeployPath",
+            "description": "storing generated report file path."
+        }
+    ],
     "execution": {
         "Node": {
             "target": "index.js"

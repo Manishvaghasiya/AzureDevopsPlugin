@@ -42,16 +42,18 @@ var fs = require('fs');
 var path = require('path');
 var dir = require('node-dir');
 var copydir = require('copy-dir');
+var zipdir = require('zip-dir');
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var inputStringServerURL_1, inputStringBaseURL_1, input_targetType, inputScriptFilePath, inputScriptFolderPath, inputStringTestObject_1, reportDploy_1, inputStringBrowser_1, inputStringStepExecutionInterval, inputStringReportInterval_1, inputCaptureFailureScreenshot_1, inputCaptureConditionFailureScreenshot_1, inputBooleanRBT_1, inputBooleanHigh_1, inputBooleanMedium_1, inputBooleanLow_1, inputPassFailPer_1, agentWorkFolder, TWreportTemplate_1, reportTemplatePath_1, token_1, tmp_1, high_1, medium_1, low_1, checkServerUrl_1, inputScriptPath_1, inputFolderPath_1, screenshotDirectory_1, progressResponse_1, reportInterimResponse_1, screenshotResponse_1, stepExecutionInterval_1, overallResult_1, passResult_1, failResult_1, skipResult_1, notRunResult_1, varClearReportInterval_1, resultCalc, singleFileExecutionThread, files, dirSize, i, error_1;
+        var inputStringServerURL_1, inputStringBaseURL_1, input_targetType_1, inputScriptFilePath, inputScriptFolderPath, inputStringTestObject_1, reportDploy_1, inputStringBrowser_1, inputStringStepExecutionInterval, inputStringReportInterval_1, inputCaptureFailureScreenshot_1, inputCaptureConditionFailureScreenshot_1, inputMailReport_1, inputBooleanRBT_1, inputBooleanHigh_1, inputBooleanMedium_1, inputBooleanLow_1, inputPassFailPer_1, agentWorkFolder, TWreportTemplate_1, reportTemplatePath_1, token_1, tmp_1, count_1, rbt_1, high_1, medium_1, low_1, checkServerUrl_1, inputScriptPath_1, inputFolderPath_1, screenshotDirectory_1, progressResponse_1, reportInterimResponse_1, reportDployPlace_1, screenshotResponse_1, stepExecutionInterval_1, overallResult_1, passResult_1, failResult_1, skipResult_1, notRunResult_1, varClearInterval_1, reportFolderExtraPath_1, resultCalc, deployReportTemplate, singleFileExecutionThread, convertReportToZIP, randomNumber, files, dirSize, i, error_1;
+        var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 18, , 19]);
+                    _a.trys.push([0, 22, , 23]);
                     inputStringServerURL_1 = task.getInput('serverURL', true);
                     inputStringBaseURL_1 = task.getInput('baseURL', false);
-                    input_targetType = task.getInput('targetType', false);
+                    input_targetType_1 = task.getInput('targetType', false);
                     inputScriptFilePath = task.getInput('filePath', /*required*/ true);
                     inputScriptFolderPath = task.getInput('folderPath', /*required*/ true);
                     inputStringTestObject_1 = task.getInput('testObject', false);
@@ -61,6 +63,7 @@ function run() {
                     inputStringReportInterval_1 = task.getInput('reportInterval', true);
                     inputCaptureFailureScreenshot_1 = task.getInput('captureFailureScreenshot', false);
                     inputCaptureConditionFailureScreenshot_1 = task.getInput('captureConditionFailureScreenshot', false);
+                    inputMailReport_1 = task.getInput('mailReport', false);
                     inputBooleanRBT_1 = task.getInput('rbt', false);
                     inputBooleanHigh_1 = task.getInput('high', false);
                     inputBooleanMedium_1 = task.getInput('medium', false);
@@ -68,64 +71,26 @@ function run() {
                     inputPassFailPer_1 = task.getInput("passFailPer", false);
                     agentWorkFolder = task.getVariable('Agent.RootDirectory');
                     TWreportTemplate_1 = process.env.APPDATA + "\\TWTemplate";
-                    reportTemplatePath_1 = agentWorkFolder + "\\_tasks\\TWExtension_937e4568-749e-40d0-9778-78156ef133d3\\1.7.12\\ReportTemplate";
-                    // // test environments
-                    // const inputStringServerURL: string = 'http://172.16.33.231:5050/';
-                    // const inputStringBaseURL: string = 't';
-                    // const input_targetType: string = 'FILEPATH';
-                    // const inputScriptFilePath: string = 'C:/Users/mbvaghasiya.CYGNET/Desktop/rr.twizx';
-                    // const inputScriptFolderPath: string = '';
-                    // const inputStringTestObject: string = '';
-                    // const reportDploy: string = 'C:/Users/mbvaghasiya.CYGNET/Desktop/Report';
-                    // const inputStringBrowser: string = 'Google Chrome';
-                    // const inputStringStepExecutionInterval: string = '2000';
-                    // const inputStringReportInterval: string = '5000';
-                    // const inputCaptureFailureScreenshot: string = 'true';
-                    // const inputCaptureConditionFailureScreenshot: string = 'true';
-                    // const inputBooleanRBT: string = 'true';
-                    // const inputBooleanHigh: string = 'false';
-                    // const inputBooleanMedium: string = 'true';
-                    // const inputBooleanLow: string = 'false';
-                    // const inputPassFailPer: any = '50';
-                    // const agentWorkFolder = task.getVariable('Agent.RootDirectory');
-                    // const TWreportTemplate = 'E:/AzureDevopsPlugin/buildAndReleaseTask/ReportTemplate';
-                    // const reportTemplatePath = agentWorkFolder + "\\_tasks\\TWExtension_937e4568-749e-40d0-9778-78156ef133d3\\1.7.11\\ReportTemplate";
+                    reportTemplatePath_1 = agentWorkFolder + "\\_tasks\\TWExtension_937e4568-749e-40d0-9778-78156ef133d6\\11.0.0\\ReportTemplate";
                     return [4 /*yield*/, q_1.delay(2000)];
                 case 1:
-                    // // test environments
-                    // const inputStringServerURL: string = 'http://172.16.33.231:5050/';
-                    // const inputStringBaseURL: string = 't';
-                    // const input_targetType: string = 'FILEPATH';
-                    // const inputScriptFilePath: string = 'C:/Users/mbvaghasiya.CYGNET/Desktop/rr.twizx';
-                    // const inputScriptFolderPath: string = '';
-                    // const inputStringTestObject: string = '';
-                    // const reportDploy: string = 'C:/Users/mbvaghasiya.CYGNET/Desktop/Report';
-                    // const inputStringBrowser: string = 'Google Chrome';
-                    // const inputStringStepExecutionInterval: string = '2000';
-                    // const inputStringReportInterval: string = '5000';
-                    // const inputCaptureFailureScreenshot: string = 'true';
-                    // const inputCaptureConditionFailureScreenshot: string = 'true';
-                    // const inputBooleanRBT: string = 'true';
-                    // const inputBooleanHigh: string = 'false';
-                    // const inputBooleanMedium: string = 'true';
-                    // const inputBooleanLow: string = 'false';
-                    // const inputPassFailPer: any = '50';
-                    // const agentWorkFolder = task.getVariable('Agent.RootDirectory');
-                    // const TWreportTemplate = 'E:/AzureDevopsPlugin/buildAndReleaseTask/ReportTemplate';
-                    // const reportTemplatePath = agentWorkFolder + "\\_tasks\\TWExtension_937e4568-749e-40d0-9778-78156ef133d3\\1.7.11\\ReportTemplate";
                     _a.sent();
                     token_1 = '';
                     tmp_1 = 0;
+                    count_1 = 0;
+                    rbt_1 = false;
                     high_1 = false;
                     medium_1 = false;
                     low_1 = false;
                     reportInterimResponse_1 = '';
+                    reportDployPlace_1 = '';
                     stepExecutionInterval_1 = Number(inputStringStepExecutionInterval);
                     overallResult_1 = [];
                     passResult_1 = [];
                     failResult_1 = [];
                     skipResult_1 = [];
                     notRunResult_1 = [];
+                    reportFolderExtraPath_1 = '';
                     resultCalc = function () {
                         return __awaiter(this, void 0, void 0, function () {
                             var sumOverall, sumPass, sumFail, sumSkip, sumNotRun, j, k, l, m, i, avgPassPer;
@@ -174,6 +139,77 @@ function run() {
                             });
                         });
                     };
+                    deployReportTemplate = function (randomFolderNumber) {
+                        return __awaiter(this, void 0, void 0, function () {
+                            var today, dd, mm, yyyy, randomNumber;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0:
+                                        today = new Date();
+                                        dd = today.getDate();
+                                        mm = today.getMonth() + 1;
+                                        yyyy = today.getFullYear();
+                                        if (dd < 10)
+                                            dd = '0' + dd;
+                                        if (mm < 10)
+                                            mm = '0' + mm;
+                                        randomNumber = Math.floor(100000 + Math.random() * 900000);
+                                        reportFolderExtraPath_1 = randomFolderNumber ? '\\REPORT_FOLDER_' + randomFolderNumber : '';
+                                        reportDployPlace_1 = reportDploy_1 + reportFolderExtraPath_1 + "\\Report_" + dd + mm + yyyy + "_" + randomNumber;
+                                        if (!!fs.existsSync(TWreportTemplate_1)) return [3 /*break*/, 3];
+                                        return [4 /*yield*/, copydir.sync(reportTemplatePath_1, TWreportTemplate_1)];
+                                    case 1:
+                                        _a.sent();
+                                        return [4 /*yield*/, q_1.delay(2000)];
+                                    case 2:
+                                        _a.sent();
+                                        return [3 /*break*/, 6];
+                                    case 3:
+                                        if (!!fs.existsSync(TWreportTemplate_1)) return [3 /*break*/, 6];
+                                        return [4 /*yield*/, copydir.sync(reportTemplatePath_1, TWreportTemplate_1)];
+                                    case 4:
+                                        _a.sent();
+                                        return [4 /*yield*/, q_1.delay(2000)];
+                                    case 5:
+                                        _a.sent();
+                                        _a.label = 6;
+                                    case 6:
+                                        if (!!fs.existsSync(TWreportTemplate_1)) return [3 /*break*/, 9];
+                                        return [4 /*yield*/, copydir.sync(TWreportTemplate_1, reportDployPlace_1)];
+                                    case 7:
+                                        _a.sent();
+                                        return [4 /*yield*/, q_1.delay(2000)];
+                                    case 8:
+                                        _a.sent();
+                                        return [3 /*break*/, 13];
+                                    case 9:
+                                        if (!!fs.existsSync(reportDployPlace_1)) return [3 /*break*/, 12];
+                                        return [4 /*yield*/, copydir.sync(TWreportTemplate_1, reportDployPlace_1)];
+                                    case 10:
+                                        _a.sent();
+                                        return [4 /*yield*/, q_1.delay(2000)];
+                                    case 11:
+                                        _a.sent();
+                                        return [3 /*break*/, 13];
+                                    case 12: throw new Error(" Task Failed : Report Template not Found !!");
+                                    case 13:
+                                        screenshotDirectory_1 = reportDployPlace_1 + "\\screenshots";
+                                        return [4 /*yield*/, fs.readdir(screenshotDirectory_1, function (err, files) {
+                                                // if (err) throw new Error(" Task Failed : Report Template not Found !!");
+                                                for (var _i = 0, files_1 = files; _i < files_1.length; _i++) {
+                                                    var file = files_1[_i];
+                                                    fs.unlink(path.join(screenshotDirectory_1, file), function (err) {
+                                                        // if (err) throw new Error(" Task Failed : Error in cleaning Screenshot directory ");
+                                                    });
+                                                }
+                                            })];
+                                    case 14:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        });
+                    };
                     singleFileExecutionThread = function () {
                         return __awaiter(this, void 0, void 0, function () {
                             function process() {
@@ -184,30 +220,36 @@ function run() {
                                             case 0: return [4 /*yield*/, progress_response()];
                                             case 1:
                                                 progressLog = _a.sent();
-                                                return [4 /*yield*/, q_1.delay(2000)];
+                                                if (!(progressLog && progressLog != undefined)) return [3 /*break*/, 6];
+                                                if (!(progressLog.status == 'play')) return [3 /*break*/, 5];
+                                                return [4 /*yield*/, q_1.delay(5000)];
                                             case 2:
-                                                _a.sent();
-                                                if (!(progressLog && progressLog != undefined)) return [3 /*break*/, 7];
-                                                if (!(progressLog.status == 'play')) return [3 /*break*/, 6];
-                                                return [4 /*yield*/, screenshotGeneration()];
-                                            case 3:
                                                 _a.sent();
                                                 if (progressLog.progress > tmp_1) {
                                                     console.log(" Script  " + progressLog.progress + " %  completed");
                                                 }
                                                 return [4 /*yield*/, progressLog.progress];
-                                            case 4:
+                                            case 3:
                                                 tmp_1 = _a.sent();
                                                 return [4 /*yield*/, process()];
-                                            case 5:
+                                            case 4:
                                                 _a.sent();
-                                                _a.label = 6;
-                                            case 6: return [3 /*break*/, 9];
-                                            case 7: return [4 /*yield*/, process()];
+                                                _a.label = 5;
+                                            case 5: return [3 /*break*/, 10];
+                                            case 6:
+                                                count_1++;
+                                                if (!(count_1 < 5)) return [3 /*break*/, 9];
+                                                return [4 /*yield*/, q_1.delay(2000)];
+                                            case 7:
+                                                _a.sent();
+                                                return [4 /*yield*/, process()];
                                             case 8:
                                                 _a.sent();
-                                                _a.label = 9;
-                                            case 9: return [2 /*return*/];
+                                                return [3 /*break*/, 10];
+                                            case 9:
+                                                count_1 = 0;
+                                                _a.label = 10;
+                                            case 10: return [2 /*return*/];
                                         }
                                     });
                                 });
@@ -226,7 +268,7 @@ function run() {
                                                 reportInterimResponse_1 = _a.sent();
                                                 _a.label = 3;
                                             case 3:
-                                                filePath = reportDployPlace + "\\data\\results.js";
+                                                filePath = reportDployPlace_1 + "\\data\\results.js";
                                                 _a.label = 4;
                                             case 4:
                                                 _a.trys.push([4, 7, , 8]);
@@ -404,11 +446,13 @@ function run() {
                                         switch (_a.label) {
                                             case 0:
                                                 if (inputBooleanRBT_1 === 'true') {
+                                                    rbt_1 = true;
                                                     high_1 = inputBooleanHigh_1 === 'true';
                                                     low_1 = inputBooleanLow_1 === 'true';
                                                     medium_1 = inputBooleanMedium_1 === 'true';
                                                 }
                                                 else {
+                                                    rbt_1 = false;
                                                     high_1 = false;
                                                     medium_1 = false;
                                                     low_1 = false;
@@ -423,8 +467,12 @@ function run() {
                                                         "interval": stepInterval,
                                                         "operatingSystem": "Windows",
                                                         "version": "",
-                                                        "TestObject": inputStringTestObject_1,
-                                                        "reportPath": reportDployPlace,
+                                                        "rbt": rbt_1,
+                                                        "high": high_1,
+                                                        "medium": medium_1,
+                                                        "low": low_1,
+                                                        "TestObject": inputStringTestObject_1 || "",
+                                                        "reportPath": reportDployPlace_1,
                                                         "baseURL": inputStringBaseURL_1,
                                                         "isFailureScreenshot": inputCaptureFailureScreenshot_1,
                                                         "isConditionFailureScreenshot": inputCaptureConditionFailureScreenshot_1,
@@ -538,69 +586,10 @@ function run() {
                                     });
                                 });
                             }
-                            var today, dd, mm, yyyy, randomNumber, reportDployPlace, isServerUp, isTokenRecieved, isparamResponseRecieved, isScriptPlay, result, tmpPass, tmpFail, tmpSkip, tmpNotRun, totalCase, passPercentage;
+                            var isServerUp, isTokenRecieved, isparamResponseRecieved, isScriptPlay, result, tmpPass, tmpFail, tmpSkip, tmpNotRun, totalCase, passPercentage;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
-                                        today = new Date();
-                                        dd = today.getDate();
-                                        mm = today.getMonth() + 1;
-                                        yyyy = today.getFullYear();
-                                        if (dd < 10)
-                                            dd = '0' + dd;
-                                        if (mm < 10)
-                                            mm = '0' + mm;
-                                        randomNumber = Math.floor(100000 + Math.random() * 900000);
-                                        reportDployPlace = reportDploy_1 + "\\Report_" + dd + mm + yyyy + "_" + randomNumber;
-                                        if (!!fs.existsSync(TWreportTemplate_1)) return [3 /*break*/, 3];
-                                        return [4 /*yield*/, copydir.sync(reportTemplatePath_1, TWreportTemplate_1)];
-                                    case 1:
-                                        _a.sent();
-                                        return [4 /*yield*/, q_1.delay(2000)];
-                                    case 2:
-                                        _a.sent();
-                                        return [3 /*break*/, 6];
-                                    case 3:
-                                        if (!!fs.existsSync(TWreportTemplate_1)) return [3 /*break*/, 6];
-                                        return [4 /*yield*/, copydir.sync(reportTemplatePath_1, TWreportTemplate_1)];
-                                    case 4:
-                                        _a.sent();
-                                        return [4 /*yield*/, q_1.delay(2000)];
-                                    case 5:
-                                        _a.sent();
-                                        _a.label = 6;
-                                    case 6:
-                                        if (!!fs.existsSync(TWreportTemplate_1)) return [3 /*break*/, 9];
-                                        return [4 /*yield*/, copydir.sync(TWreportTemplate_1, reportDployPlace)];
-                                    case 7:
-                                        _a.sent();
-                                        return [4 /*yield*/, q_1.delay(2000)];
-                                    case 8:
-                                        _a.sent();
-                                        return [3 /*break*/, 13];
-                                    case 9:
-                                        if (!!fs.existsSync(reportDployPlace)) return [3 /*break*/, 12];
-                                        return [4 /*yield*/, copydir.sync(TWreportTemplate_1, reportDployPlace)];
-                                    case 10:
-                                        _a.sent();
-                                        return [4 /*yield*/, q_1.delay(2000)];
-                                    case 11:
-                                        _a.sent();
-                                        return [3 /*break*/, 13];
-                                    case 12: throw new Error(" Task Failed : Report Template not Found !!");
-                                    case 13:
-                                        screenshotDirectory_1 = reportDployPlace + "\\screenshots";
-                                        return [4 /*yield*/, fs.readdir(screenshotDirectory_1, function (err, files) {
-                                                // if (err) throw new Error(" Task Failed : Report Template not Found !!");
-                                                for (var _i = 0, files_1 = files; _i < files_1.length; _i++) {
-                                                    var file = files_1[_i];
-                                                    fs.unlink(path.join(screenshotDirectory_1, file), function (err) {
-                                                        // if (err) throw new Error(" Task Failed : Error in cleaning Screenshot directory ");
-                                                    });
-                                                }
-                                            })];
-                                    case 14:
-                                        _a.sent();
                                         //Task Parameters
                                         console.log('\n Server URl : ' + inputStringServerURL_1);
                                         if (inputStringBaseURL_1) {
@@ -616,7 +605,7 @@ function run() {
                                             console.log(' Script Path : ' + inputScriptPath_1);
                                         }
                                         console.log(' Test Object : ' + inputStringBaseURL_1);
-                                        console.log(' Report Path : ' + reportDployPlace);
+                                        console.log(' Report Path : ' + reportDployPlace_1);
                                         console.log(' Browser : ' + inputStringBrowser_1);
                                         if (inputPassFailPer_1) {
                                             console.log(" Passing '%' : " + inputPassFailPer_1 + ' %');
@@ -626,61 +615,60 @@ function run() {
                                         }
                                         console.log(' Capture Failure Screenshot : ' + inputCaptureFailureScreenshot_1);
                                         console.log(' Capture Condition Failure Screenshot : ' + inputCaptureConditionFailureScreenshot_1);
+                                        console.log(' Send Report With Mail : ' + inputMailReport_1);
                                         console.log(' RBT enabled execution : ', inputBooleanRBT_1);
                                         console.log(' High : ', inputBooleanHigh_1);
                                         console.log(' Medium : ', inputBooleanMedium_1);
                                         console.log(' Low : ', inputBooleanLow_1);
                                         return [4 /*yield*/, checkServer()];
-                                    case 15:
+                                    case 1:
                                         isServerUp = _a.sent();
-                                        if (!isServerUp) return [3 /*break*/, 34];
+                                        if (!isServerUp) return [3 /*break*/, 19];
                                         return [4 /*yield*/, getTokenForFile()];
-                                    case 16:
+                                    case 2:
                                         isTokenRecieved = _a.sent();
-                                        if (!isTokenRecieved) return [3 /*break*/, 32];
+                                        if (!isTokenRecieved) return [3 /*break*/, 17];
                                         console.log(" Playing with token : " + isTokenRecieved);
                                         return [4 /*yield*/, setParamsForFile()];
-                                    case 17:
+                                    case 3:
                                         isparamResponseRecieved = _a.sent();
-                                        if (!isparamResponseRecieved) return [3 /*break*/, 30];
+                                        if (!isparamResponseRecieved) return [3 /*break*/, 15];
                                         return [4 /*yield*/, runScript()];
-                                    case 18:
+                                    case 4:
                                         isScriptPlay = _a.sent();
-                                        varClearReportInterval_1 = setInterval(reportGenerate, Number(inputStringReportInterval_1));
+                                        varClearInterval_1 = setInterval(screenshotGeneration, 1000);
                                         console.log(" Executing Script File : " + inputScriptPath_1);
                                         console.log("\n ========================== Script Execution Start ===========================");
                                         console.log("\n Script  0 %  completed");
-                                        if (!isScriptPlay) return [3 /*break*/, 28];
+                                        if (!isScriptPlay) return [3 /*break*/, 13];
                                         return [4 /*yield*/, process()];
-                                    case 19:
+                                    case 5:
                                         _a.sent();
-                                        return [4 /*yield*/, q_1.delay(1000)];
-                                    case 20:
-                                        _a.sent();
+                                        console.log(" Script  100 %  completed");
                                         console.log("\n ========================== Script Execution End ===========================\n");
-                                        clearInterval(varClearReportInterval_1);
                                         return [4 /*yield*/, reportGenerate()];
-                                    case 21:
+                                    case 6:
                                         _a.sent();
+                                        clearInterval(varClearInterval_1);
                                         return [4 /*yield*/, q_1.delay(Number(inputStringReportInterval_1))];
-                                    case 22:
+                                    case 7:
                                         _a.sent();
                                         return [4 /*yield*/, reportInterimResponse_1.result];
-                                    case 23:
+                                    case 8:
                                         result = _a.sent();
                                         return [4 /*yield*/, result.pass];
-                                    case 24:
+                                    case 9:
                                         tmpPass = _a.sent();
                                         return [4 /*yield*/, result.fail];
-                                    case 25:
+                                    case 10:
                                         tmpFail = _a.sent();
                                         return [4 /*yield*/, result.skip];
-                                    case 26:
+                                    case 11:
                                         tmpSkip = _a.sent();
                                         return [4 /*yield*/, result.notRun];
-                                    case 27:
+                                    case 12:
                                         tmpNotRun = _a.sent();
-                                        totalCase = tmpPass + tmpFail + tmpSkip + tmpNotRun;
+                                        totalCase = tmpPass + tmpFail + tmpNotRun;
                                         passPercentage = tmpPass / totalCase * 100;
                                         overallResult_1.push(passPercentage);
                                         passResult_1.push(tmpPass);
@@ -696,7 +684,7 @@ function run() {
                                                     + ' |  SKIP :  ' + tmpSkip
                                                     + ' |  NOT RUN  : '
                                                     + tmpNotRun + ' ] '
-                                                    + "\n is here at " + ' [ ' + reportDployPlace + ' ] \n');
+                                                    + "\n is here at " + ' [ ' + reportDployPlace_1 + ' ] \n');
                                             }
                                             else {
                                                 console.log(" Report for the testingwhiz script " + ' [ ' + inputScriptPath_1 + ' ] '
@@ -705,7 +693,7 @@ function run() {
                                                     + ' |  FAIL :  ' + tmpFail
                                                     + ' |  SKIP :  ' + tmpSkip
                                                     + ' |  NOT RUN  : ' + tmpNotRun + ' ] '
-                                                    + "\n is here at " + ' [ ' + reportDployPlace + ' ] \n');
+                                                    + "\n is here at " + ' [ ' + reportDployPlace_1 + ' ] \n');
                                             }
                                         }
                                         catch (error) {
@@ -717,19 +705,40 @@ function run() {
                                         else {
                                             console.log("\n Finished : FAILED !\n");
                                         }
-                                        return [3 /*break*/, 29];
-                                    case 28: throw new Error(" Task Failed : Error in script execution ");
-                                    case 29: return [3 /*break*/, 31];
-                                    case 30: throw new Error(" Task Failed : Parameter is not set ");
-                                    case 31: return [3 /*break*/, 33];
-                                    case 32: throw new Error(" Task Failed : TWToken not Found ");
-                                    case 33: return [3 /*break*/, 35];
-                                    case 34: throw new Error(" Task Failed : Testingwhiz server is not UP !");
-                                    case 35: return [2 /*return*/];
+                                        return [3 /*break*/, 14];
+                                    case 13: throw new Error(" Task Failed : Error in script execution ");
+                                    case 14: return [3 /*break*/, 16];
+                                    case 15: throw new Error(" Task Failed : Parameter is not set ");
+                                    case 16: return [3 /*break*/, 18];
+                                    case 17: throw new Error(" Task Failed : TWToken not Found ");
+                                    case 18: return [3 /*break*/, 20];
+                                    case 19: throw new Error(" Task Failed : Testingwhiz server is not UP !");
+                                    case 20: return [2 /*return*/];
                                 }
                             });
                         });
                     };
+                    convertReportToZIP = function () { return __awaiter(_this, void 0, void 0, function () {
+                        var folderPath;
+                        return __generator(this, function (_a) {
+                            if (inputMailReport_1 === 'true') {
+                                if (input_targetType_1.toUpperCase() == 'FILEPATH') {
+                                    task.setVariable('reportDeployPath', reportDployPlace_1 + '.zip');
+                                    zipdir(reportDployPlace_1, { saveTo: reportDployPlace_1 + '.zip' }, function (err, buffer) {
+                                        // do something
+                                    });
+                                }
+                                else if (input_targetType_1.toUpperCase() == 'FOLDERPATH') {
+                                    folderPath = reportDploy_1 + "\\" + reportFolderExtraPath_1;
+                                    task.setVariable('reportDeployPath', folderPath + '.zip');
+                                    zipdir(folderPath, { saveTo: folderPath + '.zip' }, function (err, buffer) {
+                                        // do something
+                                    });
+                                }
+                            }
+                            return [2 /*return*/];
+                        });
+                    }); };
                     if (!!(inputPassFailPer_1 <= 100 && inputPassFailPer_1 >= 0)) return [3 /*break*/, 2];
                     console.log("\n");
                     throw new Error(inputPassFailPer_1 + "is Inavlid Pass/Fail Percentage value. Please Provide valid value between [1 - 100]. ");
@@ -738,58 +747,71 @@ function run() {
                     console.log("\n");
                     throw new Error(inputStringReportInterval_1 + ' is Inavlid value for Report interval. Please Provide valid value greater than 1000 ms.');
                 case 3:
-                    if (!(input_targetType.toUpperCase() == 'FILEPATH')) return [3 /*break*/, 8];
+                    if (!(input_targetType_1.toUpperCase() == 'FILEPATH')) return [3 /*break*/, 10];
                     inputScriptPath_1 = inputScriptFilePath;
                     if (!(!task.stats(inputScriptPath_1).isFile() || !inputScriptPath_1.toUpperCase().match(/\.TWIZX$/))) return [3 /*break*/, 4];
                     console.log("\n");
                     throw new Error(inputScriptPath_1 + " is Invalid File [ Only TWIZX/twizx file is accepted ] ");
                 case 4:
                     console.log("\n\n\n Task Configuration ");
-                    return [4 /*yield*/, singleFileExecutionThread()];
+                    return [4 /*yield*/, deployReportTemplate()];
                 case 5:
                     _a.sent();
-                    return [4 /*yield*/, resultCalc()];
+                    return [4 /*yield*/, singleFileExecutionThread()];
                 case 6:
                     _a.sent();
-                    _a.label = 7;
-                case 7: return [3 /*break*/, 17];
+                    return [4 /*yield*/, convertReportToZIP()];
+                case 7:
+                    _a.sent();
+                    return [4 /*yield*/, resultCalc()];
                 case 8:
-                    if (!(input_targetType.toUpperCase() == 'FOLDERPATH')) return [3 /*break*/, 17];
+                    _a.sent();
+                    _a.label = 9;
+                case 9: return [3 /*break*/, 21];
+                case 10:
+                    if (!(input_targetType_1.toUpperCase() == 'FOLDERPATH')) return [3 /*break*/, 21];
                     inputFolderPath_1 = inputScriptFolderPath;
+                    randomNumber = Math.floor(100000 + Math.random() * 900000);
                     files = dir.files(inputFolderPath_1, { sync: true });
                     dirSize = files.length;
                     return [4 /*yield*/, dirSize];
-                case 9:
+                case 11:
                     _a.sent(), files;
                     i = 0;
-                    _a.label = 10;
-                case 10:
-                    if (!(i < dirSize)) return [3 /*break*/, 15];
-                    if (!(task.stats(files[i]).isFile() && files[i].toUpperCase().match(/\.TWIZX$/))) return [3 /*break*/, 13];
+                    _a.label = 12;
+                case 12:
+                    if (!(i < dirSize)) return [3 /*break*/, 18];
+                    if (!(task.stats(files[i]).isFile() && files[i].toUpperCase().match(/\.TWIZX$/))) return [3 /*break*/, 16];
                     return [4 /*yield*/, files[i]];
-                case 11:
+                case 13:
                     inputScriptPath_1 = _a.sent();
                     console.log("\n\n\n Task Configuration\n");
-                    return [4 /*yield*/, singleFileExecutionThread()];
-                case 12:
-                    _a.sent();
-                    return [3 /*break*/, 14];
-                case 13:
-                    console.log(' Inavaid files are : ', files[i]);
-                    _a.label = 14;
+                    return [4 /*yield*/, deployReportTemplate(randomNumber)];
                 case 14:
-                    i++;
-                    return [3 /*break*/, 10];
-                case 15: return [4 /*yield*/, resultCalc()];
-                case 16:
                     _a.sent();
+                    return [4 /*yield*/, singleFileExecutionThread()];
+                case 15:
+                    _a.sent();
+                    return [3 /*break*/, 17];
+                case 16:
+                    console.log(" Inavaid files are : ", files[i]);
                     _a.label = 17;
-                case 17: return [3 /*break*/, 19];
-                case 18:
+                case 17:
+                    i++;
+                    return [3 /*break*/, 12];
+                case 18: return [4 /*yield*/, convertReportToZIP()];
+                case 19:
+                    _a.sent();
+                    return [4 /*yield*/, resultCalc()];
+                case 20:
+                    _a.sent();
+                    _a.label = 21;
+                case 21: return [3 /*break*/, 23];
+                case 22:
                     error_1 = _a.sent();
                     task.setResult(task.TaskResult.Failed, error_1);
-                    return [3 /*break*/, 19];
-                case 19: return [2 /*return*/];
+                    return [3 /*break*/, 23];
+                case 23: return [2 /*return*/];
             }
         });
     });

@@ -1,9 +1,9 @@
 {
     "manifestVersion": 1,
     "id": "build-release-task",
-    "name": "TestingWhiz Plugin",
-    "version": "1.7.12",
-    "publisher": "CygnetInfotech",
+    "name": "TW-Plugin_beta_v.1",
+    "version": "11.0.0",
+    "publisher": "TestEnvironment",
     "targets": [{
         "id": "Microsoft.VisualStudio.Services"
     }],
