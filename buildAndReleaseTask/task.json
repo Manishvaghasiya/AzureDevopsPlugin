@@ -3,7 +3,7 @@
     "name": "TWExtension",
     "friendlyName": "Testingwhiz Plugin",
     "description": "build/release task to Run UI test with Testingwhiz",
-    "helpMarkDown": "Version: 1.1.1029. [More information](https://www.testing-whiz.com/integrations)",
+    "helpMarkDown": "Version: 2.0.0 [More information](https://www.testing-whiz.com/integrations)",
     "category": "Utility",
     "author": "Cygnet Infotech",
     "version": {
