@@ -45,7 +45,7 @@ var copydir = require('copy-dir');
 var zipdir = require('zip-dir');
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var inputStringServerURL_1, inputStringBaseURL_1, input_targetType_1, inputScriptFilePath, inputScriptFolderPath, inputStringTestObject_1, reportDploy_1, inputStringBrowser_1, inputStringStepExecutionInterval, inputStringReportInterval_1, inputCaptureFailureScreenshot_1, inputCaptureConditionFailureScreenshot_1, inputMailReport_1, inputBooleanRBT_1, inputBooleanHigh_1, inputBooleanMedium_1, inputBooleanLow_1, inputPassFailPer_1, agentWorkFolder, TWreportTemplate_1, reportTemplatePath_1, token_1, tmp_1, count_1, rbt_1, high_1, medium_1, low_1, checkServerUrl_1, inputScriptPath_1, inputFolderPath_1, screenshotDirectory_1, progressResponse_1, reportInterimResponse_1, reportDployPlace_1, screenshotResponse_1, stepExecutionInterval_1, overallResult_1, passResult_1, failResult_1, skipResult_1, notRunResult_1, varClearInterval_1, reportFolderExtraPath_1, resultCalc, deployReportTemplate, singleFileExecutionThread, convertReportToZIP, randomNumber, files, dirSize, i, error_1;
+        var inputStringServerURL_1, inputStringBaseURL_1, input_targetType_1, inputScriptFilePath, inputScriptFolderPath, inputStringTestObject_1, reportDploy_1, inputStringBrowser_1, inputStringStepExecutionInterval, inputStringReportInterval_1, inputCaptureFailureScreenshot_1, inputCaptureConditionFailureScreenshot_1, inputMailReport_1, inputBooleanRBTPriorityHigh_1, inputBooleanRBTPriorityMedium_1, inputBooleanRBTPriorityLow_1, inputPassFailPer_1, agentWorkFolder, currentReleaseName_1, TWreportTemplate_1, reportTemplatePath_1, token_1, tmp_1, count_1, isRBTEnable_1, rbtPriorityHigh_1, rbtPriorityMedium_1, rbtPriorityLow_1, checkServerUrl_1, inputScriptPath_1, inputFolderPath_1, screenshotDirectory_1, progressResponse_1, reportInterimResponse_1, reportDployPlace_1, screenshotResponse_1, stepExecutionInterval_1, overallResult_1, passResult_1, failResult_1, skipResult_1, notRunResult_1, varClearInterval_1, reportFolderExtraPath_1, resultCalc, deployReportTemplate, singleFileExecutionThread, convertReportToZIP, today, dd, mm, yyyy, ss, min, hh, timeStamp, files, dirSize, i, error_1;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -64,24 +64,24 @@ function run() {
                     inputCaptureFailureScreenshot_1 = task.getInput('captureFailureScreenshot', false);
                     inputCaptureConditionFailureScreenshot_1 = task.getInput('captureConditionFailureScreenshot', false);
                     inputMailReport_1 = task.getInput('mailReport', false);
-                    inputBooleanRBT_1 = task.getInput('rbt', false);
-                    inputBooleanHigh_1 = task.getInput('high', false);
-                    inputBooleanMedium_1 = task.getInput('medium', false);
-                    inputBooleanLow_1 = task.getInput('low', false);
+                    inputBooleanRBTPriorityHigh_1 = task.getInput('rbtPriorityHigh', false);
+                    inputBooleanRBTPriorityMedium_1 = task.getInput('rbtPriorityMedium', false);
+                    inputBooleanRBTPriorityLow_1 = task.getInput('rbtPriorityLow', false);
                     inputPassFailPer_1 = task.getInput("passFailPer", false);
                     agentWorkFolder = task.getVariable('Agent.RootDirectory');
+                    currentReleaseName_1 = task.getVariable('Release.ReleaseName');
                     TWreportTemplate_1 = process.env.APPDATA + "\\TWTemplate";
-                    reportTemplatePath_1 = agentWorkFolder + "\\_tasks\\TWExtension_937e4568-749e-40d0-9778-78156ef133d6\\11.0.0\\ReportTemplate";
+                    reportTemplatePath_1 = agentWorkFolder + "\\_tasks\\TWExtension_937e4568-749e-40d0-9778-78156ef133d3\\2.0.0\\ReportTemplate";
                     return [4 /*yield*/, q_1.delay(2000)];
                 case 1:
                     _a.sent();
                     token_1 = '';
                     tmp_1 = 0;
                     count_1 = 0;
-                    rbt_1 = false;
-                    high_1 = false;
-                    medium_1 = false;
-                    low_1 = false;
+                    isRBTEnable_1 = false;
+                    rbtPriorityHigh_1 = false;
+                    rbtPriorityMedium_1 = false;
+                    rbtPriorityLow_1 = false;
                     reportInterimResponse_1 = '';
                     reportDployPlace_1 = '';
                     stepExecutionInterval_1 = Number(inputStringStepExecutionInterval);
@@ -139,9 +139,9 @@ function run() {
                             });
                         });
                     };
-                    deployReportTemplate = function (randomFolderNumber) {
+                    deployReportTemplate = function (folderTimeStamp) {
                         return __awaiter(this, void 0, void 0, function () {
-                            var today, dd, mm, yyyy, randomNumber;
+                            var today, dd, mm, yyyy, ss, min, hh, timeStamp;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
@@ -149,13 +149,18 @@ function run() {
                                         dd = today.getDate();
                                         mm = today.getMonth() + 1;
                                         yyyy = today.getFullYear();
-                                        if (dd < 10)
-                                            dd = '0' + dd;
-                                        if (mm < 10)
-                                            mm = '0' + mm;
-                                        randomNumber = Math.floor(100000 + Math.random() * 900000);
-                                        reportFolderExtraPath_1 = randomFolderNumber ? '\\REPORT_FOLDER_' + randomFolderNumber : '';
-                                        reportDployPlace_1 = reportDploy_1 + reportFolderExtraPath_1 + "\\Report_" + dd + mm + yyyy + "_" + randomNumber;
+                                        ss = today.getSeconds();
+                                        min = today.getMinutes();
+                                        hh = today.getHours();
+                                        dd = dd < 10 ? '0' + dd : dd;
+                                        mm = mm < 10 ? '0' + mm : mm;
+                                        hh = hh > 12 ? hh - 12 : hh;
+                                        hh = hh < 10 ? '0' + hh : hh;
+                                        min = min < 10 ? '0' + min : min;
+                                        ss = ss < 10 ? '0' + ss : ss;
+                                        timeStamp = dd + mm + yyyy + "_" + hh + min + ss;
+                                        reportFolderExtraPath_1 = folderTimeStamp ? "\\Reports_" + currentReleaseName_1 + "_" + folderTimeStamp : '';
+                                        reportDployPlace_1 = reportDploy_1 + reportFolderExtraPath_1 + "\\Report_" + currentReleaseName_1 + "_" + timeStamp;
                                         if (!!fs.existsSync(TWreportTemplate_1)) return [3 /*break*/, 3];
                                         return [4 /*yield*/, copydir.sync(reportTemplatePath_1, TWreportTemplate_1)];
                                     case 1:
@@ -445,19 +450,16 @@ function run() {
                                     return __generator(this, function (_a) {
                                         switch (_a.label) {
                                             case 0:
-                                                if (inputBooleanRBT_1 === 'true') {
-                                                    rbt_1 = true;
-                                                    high_1 = inputBooleanHigh_1 === 'true';
-                                                    low_1 = inputBooleanLow_1 === 'true';
-                                                    medium_1 = inputBooleanMedium_1 === 'true';
+                                                if (isRBTEnable_1) {
+                                                    rbtPriorityHigh_1 = inputBooleanRBTPriorityHigh_1 === 'true';
+                                                    rbtPriorityMedium_1 = inputBooleanRBTPriorityLow_1 === 'true';
+                                                    rbtPriorityLow_1 = inputBooleanRBTPriorityMedium_1 === 'true';
                                                 }
                                                 else {
-                                                    rbt_1 = false;
-                                                    high_1 = false;
-                                                    medium_1 = false;
-                                                    low_1 = false;
+                                                    rbtPriorityHigh_1 = false;
+                                                    rbtPriorityMedium_1 = false;
+                                                    rbtPriorityLow_1 = false;
                                                 }
-                                                console.log('[RBT]', inputBooleanRBT_1, '[high]', high_1, '[medium]', medium_1, '[low]', low_1);
                                                 urlParam = inputStringServerURL_1 + "params?token=" + token_1;
                                                 return [4 /*yield*/, step_interval()];
                                             case 1:
@@ -467,11 +469,11 @@ function run() {
                                                         "interval": stepInterval,
                                                         "operatingSystem": "Windows",
                                                         "version": "",
-                                                        "rbt": rbt_1,
-                                                        "high": high_1,
-                                                        "medium": medium_1,
-                                                        "low": low_1,
-                                                        "TestObject": inputStringTestObject_1 || "",
+                                                        "isRBTEnable": isRBTEnable_1,
+                                                        "highPriority": rbtPriorityHigh_1,
+                                                        "mediumPriority": rbtPriorityMedium_1,
+                                                        "lowPriority": rbtPriorityLow_1,
+                                                        "testObject": inputStringTestObject_1 || "",
                                                         "reportPath": reportDployPlace_1,
                                                         "baseURL": inputStringBaseURL_1,
                                                         "isFailureScreenshot": inputCaptureFailureScreenshot_1,
@@ -604,7 +606,7 @@ function run() {
                                         else {
                                             console.log(' Script Path : ' + inputScriptPath_1);
                                         }
-                                        console.log(' Test Object : ' + inputStringBaseURL_1);
+                                        console.log(' Test Object : ' + inputStringTestObject_1);
                                         console.log(' Report Path : ' + reportDployPlace_1);
                                         console.log(' Browser : ' + inputStringBrowser_1);
                                         if (inputPassFailPer_1) {
@@ -616,57 +618,66 @@ function run() {
                                         console.log(' Capture Failure Screenshot : ' + inputCaptureFailureScreenshot_1);
                                         console.log(' Capture Condition Failure Screenshot : ' + inputCaptureConditionFailureScreenshot_1);
                                         console.log(' Send Report With Mail : ' + inputMailReport_1);
-                                        console.log(' RBT enabled execution : ', inputBooleanRBT_1);
-                                        console.log(' High : ', inputBooleanHigh_1);
-                                        console.log(' Medium : ', inputBooleanMedium_1);
-                                        console.log(' Low : ', inputBooleanLow_1);
-                                        return [4 /*yield*/, checkServer()];
+                                        return [4 /*yield*/, q_1.delay(1000)];
                                     case 1:
-                                        isServerUp = _a.sent();
-                                        if (!isServerUp) return [3 /*break*/, 19];
-                                        return [4 /*yield*/, getTokenForFile()];
+                                        _a.sent();
+                                        isRBTEnable_1 = (inputBooleanRBTPriorityHigh_1 === 'true' || inputBooleanRBTPriorityMedium_1 === 'true' || inputBooleanRBTPriorityLow_1 === 'true' || false);
+                                        return [4 /*yield*/, q_1.delay(1000)];
                                     case 2:
+                                        _a.sent();
+                                        console.log(' Is RBT enabled execution : ', isRBTEnable_1 + '');
+                                        if (isRBTEnable_1) {
+                                            console.log(' RBT Priority High : ', inputBooleanRBTPriorityHigh_1);
+                                            console.log(' RBT Priority Medium : ', inputBooleanRBTPriorityMedium_1);
+                                            console.log(' RBT Priority Low : ', inputBooleanRBTPriorityLow_1);
+                                        }
+                                        return [4 /*yield*/, checkServer()];
+                                    case 3:
+                                        isServerUp = _a.sent();
+                                        if (!isServerUp) return [3 /*break*/, 21];
+                                        return [4 /*yield*/, getTokenForFile()];
+                                    case 4:
                                         isTokenRecieved = _a.sent();
-                                        if (!isTokenRecieved) return [3 /*break*/, 17];
+                                        if (!isTokenRecieved) return [3 /*break*/, 19];
                                         console.log(" Playing with token : " + isTokenRecieved);
                                         return [4 /*yield*/, setParamsForFile()];
-                                    case 3:
+                                    case 5:
                                         isparamResponseRecieved = _a.sent();
-                                        if (!isparamResponseRecieved) return [3 /*break*/, 15];
+                                        if (!isparamResponseRecieved) return [3 /*break*/, 17];
                                         return [4 /*yield*/, runScript()];
-                                    case 4:
+                                    case 6:
                                         isScriptPlay = _a.sent();
                                         varClearInterval_1 = setInterval(screenshotGeneration, 1000);
                                         console.log(" Executing Script File : " + inputScriptPath_1);
                                         console.log("\n ========================== Script Execution Start ===========================");
                                         console.log("\n Script  0 %  completed");
-                                        if (!isScriptPlay) return [3 /*break*/, 13];
+                                        if (!isScriptPlay) return [3 /*break*/, 15];
                                         return [4 /*yield*/, process()];
-                                    case 5:
+                                    case 7:
                                         _a.sent();
                                         console.log(" Script  100 %  completed");
                                         console.log("\n ========================== Script Execution End ===========================\n");
                                         return [4 /*yield*/, reportGenerate()];
-                                    case 6:
+                                    case 8:
                                         _a.sent();
                                         clearInterval(varClearInterval_1);
                                         return [4 /*yield*/, q_1.delay(Number(inputStringReportInterval_1))];
-                                    case 7:
+                                    case 9:
                                         _a.sent();
                                         return [4 /*yield*/, reportInterimResponse_1.result];
-                                    case 8:
+                                    case 10:
                                         result = _a.sent();
                                         return [4 /*yield*/, result.pass];
-                                    case 9:
+                                    case 11:
                                         tmpPass = _a.sent();
                                         return [4 /*yield*/, result.fail];
-                                    case 10:
+                                    case 12:
                                         tmpFail = _a.sent();
                                         return [4 /*yield*/, result.skip];
-                                    case 11:
+                                    case 13:
                                         tmpSkip = _a.sent();
                                         return [4 /*yield*/, result.notRun];
-                                    case 12:
+                                    case 14:
                                         tmpNotRun = _a.sent();
                                         totalCase = tmpPass + tmpFail + tmpNotRun;
                                         passPercentage = tmpPass / totalCase * 100;
@@ -705,15 +716,15 @@ function run() {
                                         else {
                                             console.log("\n Finished : FAILED !\n");
                                         }
-                                        return [3 /*break*/, 14];
-                                    case 13: throw new Error(" Task Failed : Error in script execution ");
-                                    case 14: return [3 /*break*/, 16];
-                                    case 15: throw new Error(" Task Failed : Parameter is not set ");
+                                        return [3 /*break*/, 16];
+                                    case 15: throw new Error(" Task Failed : Error in script execution ");
                                     case 16: return [3 /*break*/, 18];
-                                    case 17: throw new Error(" Task Failed : TWToken not Found ");
+                                    case 17: throw new Error(" Task Failed : Parameter is not set ");
                                     case 18: return [3 /*break*/, 20];
-                                    case 19: throw new Error(" Task Failed : Testingwhiz server is not UP !");
-                                    case 20: return [2 /*return*/];
+                                    case 19: throw new Error(" Task Failed : TWToken not Found ");
+                                    case 20: return [3 /*break*/, 22];
+                                    case 21: throw new Error(" Task Failed : Testingwhiz server is not UP !");
+                                    case 22: return [2 /*return*/];
                                 }
                             });
                         });
@@ -754,7 +765,7 @@ function run() {
                     throw new Error(inputScriptPath_1 + " is Invalid File [ Only TWIZX/twizx file is accepted ] ");
                 case 4:
                     console.log("\n\n\n Task Configuration ");
-                    return [4 /*yield*/, deployReportTemplate()];
+                    return [4 /*yield*/, deployReportTemplate(false)];
                 case 5:
                     _a.sent();
                     return [4 /*yield*/, singleFileExecutionThread()];
@@ -771,7 +782,20 @@ function run() {
                 case 10:
                     if (!(input_targetType_1.toUpperCase() == 'FOLDERPATH')) return [3 /*break*/, 21];
                     inputFolderPath_1 = inputScriptFolderPath;
-                    randomNumber = Math.floor(100000 + Math.random() * 900000);
+                    today = new Date();
+                    dd = today.getDate();
+                    mm = today.getMonth() + 1;
+                    yyyy = today.getFullYear();
+                    ss = today.getSeconds();
+                    min = today.getMinutes();
+                    hh = today.getHours();
+                    dd = dd < 10 ? '0' + dd : dd;
+                    mm = mm < 10 ? '0' + mm : mm;
+                    hh = hh > 12 ? hh - 12 : hh;
+                    hh = hh < 10 ? '0' + hh : hh;
+                    min = min < 10 ? '0' + min : min;
+                    ss = ss < 10 ? '0' + ss : ss;
+                    timeStamp = dd + mm + yyyy + "_" + hh + min + ss;
                     files = dir.files(inputFolderPath_1, { sync: true });
                     dirSize = files.length;
                     return [4 /*yield*/, dirSize];
@@ -786,7 +810,7 @@ function run() {
                 case 13:
                     inputScriptPath_1 = _a.sent();
                     console.log("\n\n\n Task Configuration\n");
-                    return [4 /*yield*/, deployReportTemplate(randomNumber)];
+                    return [4 /*yield*/, deployReportTemplate(timeStamp)];
                 case 14:
                     _a.sent();
                     return [4 /*yield*/, singleFileExecutionThread()];
