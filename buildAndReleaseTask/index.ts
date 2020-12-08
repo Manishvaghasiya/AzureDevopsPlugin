@@ -24,23 +24,24 @@ async function run() {
         const inputCaptureFailureScreenshot: string = task.getInput('captureFailureScreenshot', false);
         const inputCaptureConditionFailureScreenshot: string = task.getInput('captureConditionFailureScreenshot', false);
         const inputMailReport: string = task.getInput('mailReport', false);
-        const inputBooleanRBT: string = task.getInput('rbt', false);
-        const inputBooleanHigh: string = task.getInput('high', false);
-        const inputBooleanMedium: string = task.getInput('medium', false);
-        const inputBooleanLow: string = task.getInput('low', false);
+        const inputBooleanRBTPriorityHigh: string = task.getInput('rbtPriorityHigh', false);
+        const inputBooleanRBTPriorityMedium: string = task.getInput('rbtPriorityMedium', false);
+        const inputBooleanRBTPriorityLow: string = task.getInput('rbtPriorityLow', false);
         const inputPassFailPer: any = task.getInput("passFailPer", false);
         const agentWorkFolder = task.getVariable('Agent.RootDirectory');
+        const currentReleaseName = task.getVariable('Release.ReleaseName');
         const TWreportTemplate = process.env.APPDATA + "\\TWTemplate";
-        const reportTemplatePath = agentWorkFolder + "\\_tasks\\TWExtension_937e4568-749e-40d0-9778-78156ef133d6\\11.0.0\\ReportTemplate";
+        const reportTemplatePath = agentWorkFolder + "\\_tasks\\TWExtension_937e4568-749e-40d0-9778-78156ef133d3\\2.0.0\\ReportTemplate";
+
         await delay(2000);
 
         let token: any = '';
         let tmp: number = 0;
         let count: number = 0;
-        let rbt: boolean = false;
-        let high: boolean = false;
-        let medium: boolean = false;
-        let low: boolean = false;
+        let isRBTEnable: boolean = false;
+        let rbtPriorityHigh: boolean = false;
+        let rbtPriorityMedium: boolean = false;
+        let rbtPriorityLow: boolean = false;
         let checkServerUrl: any;
         let inputScriptPath: string;
         let inputFolderPath: string;
@@ -112,18 +113,25 @@ async function run() {
 
         //*********************** twizx file execution function start ***********************//
 
-
-        let deployReportTemplate = async function (randomFolderNumber?: number) {
+        let deployReportTemplate = async function (folderTimeStamp?: any) {
 
             const today = new Date();
             let dd: any = today.getDate();
             let mm: any = today.getMonth() + 1;
             let yyyy = today.getFullYear();
-            if (dd < 10) dd = '0' + dd;
-            if (mm < 10) mm = '0' + mm;
-            const randomNumber = Math.floor(100000 + Math.random() * 900000);
-            reportFolderExtraPath = randomFolderNumber ? '\\REPORT_FOLDER_' + randomFolderNumber : '';
-            reportDployPlace = reportDploy + reportFolderExtraPath + "\\Report_" + dd + mm + yyyy + "_" + randomNumber;
+            var ss: any = today.getSeconds();
+            var min: any = today.getMinutes();
+            var hh: any = today.getHours();
+            dd = dd < 10 ? '0' + dd : dd;
+            mm = mm < 10 ? '0' + mm : mm;
+            hh = hh > 12 ? hh - 12 : hh;
+            hh = hh < 10 ? '0' + hh : hh;
+            min = min < 10 ? '0' + min : min;
+            ss = ss < 10 ? '0' + ss : ss;
+            const timeStamp = dd + mm + yyyy + "_" + hh + min + ss;
+
+            reportFolderExtraPath = folderTimeStamp ? "\\Reports_" + currentReleaseName + "_" + folderTimeStamp : '';
+            reportDployPlace = reportDploy + reportFolderExtraPath + "\\Report_" + currentReleaseName + "_" + timeStamp;
             if (!fs.existsSync(TWreportTemplate)) {
                 await copydir.sync(reportTemplatePath, TWreportTemplate);
                 await delay(2000);
@@ -168,7 +176,7 @@ async function run() {
             } else {
                 console.log(' Script Path : ' + inputScriptPath);
             }
-            console.log(' Test Object : ' + inputStringBaseURL);
+            console.log(' Test Object : ' + inputStringTestObject);
             console.log(' Report Path : ' + reportDployPlace);
             console.log(' Browser : ' + inputStringBrowser);
             if (inputPassFailPer) {
@@ -179,10 +187,15 @@ async function run() {
             console.log(' Capture Failure Screenshot : ' + inputCaptureFailureScreenshot);
             console.log(' Capture Condition Failure Screenshot : ' + inputCaptureConditionFailureScreenshot);
             console.log(' Send Report With Mail : ' + inputMailReport);
-            console.log(' RBT enabled execution : ', inputBooleanRBT);
-            console.log(' High : ', inputBooleanHigh);
-            console.log(' Medium : ', inputBooleanMedium);
-            console.log(' Low : ', inputBooleanLow);
+            await delay(1000);
+            isRBTEnable = (inputBooleanRBTPriorityHigh === 'true' || inputBooleanRBTPriorityMedium === 'true' || inputBooleanRBTPriorityLow === 'true' || false);
+            await delay(1000);
+            console.log(' Is RBT enabled execution : ', isRBTEnable + '');
+            if (isRBTEnable) {
+                console.log(' RBT Priority High : ', inputBooleanRBTPriorityHigh);
+                console.log(' RBT Priority Medium : ', inputBooleanRBTPriorityMedium);
+                console.log(' RBT Priority Low : ', inputBooleanRBTPriorityLow);
+            }
 
             //Process starts
             const isServerUp = await checkServer();
@@ -431,16 +444,14 @@ async function run() {
 
             async function setParamsForFile() {
 
-                if (inputBooleanRBT === 'true') {
-                    rbt = true;
-                    high = inputBooleanHigh === 'true';
-                    low = inputBooleanLow === 'true';
-                    medium = inputBooleanMedium === 'true';
+                if (isRBTEnable) {
+                    rbtPriorityHigh = inputBooleanRBTPriorityHigh === 'true';
+                    rbtPriorityMedium = inputBooleanRBTPriorityLow === 'true';
+                    rbtPriorityLow = inputBooleanRBTPriorityMedium === 'true';
                 } else {
-                    rbt = false;
-                    high = false;
-                    medium = false;
-                    low = false;
+                    rbtPriorityHigh = false;
+                    rbtPriorityMedium = false;
+                    rbtPriorityLow = false;
                 }
 
                 let urlParam = inputStringServerURL + "params?token=" + token;
@@ -451,11 +462,11 @@ async function run() {
                     "interval": stepInterval,
                     "operatingSystem": "Windows",
                     "version": "",
-                    "rbt": rbt,
-                    "high": high,
-                    "medium": medium,
-                    "low": low,
-                    "TestObject": inputStringTestObject || "",
+                    "isRBTEnable": isRBTEnable,
+                    "highPriority": rbtPriorityHigh,
+                    "mediumPriority": rbtPriorityMedium,
+                    "lowPriority": rbtPriorityLow,
+                    "testObject": inputStringTestObject || "",
                     "reportPath": reportDployPlace,
                     "baseURL": inputStringBaseURL,
                     "isFailureScreenshot": inputCaptureFailureScreenshot,
@@ -589,7 +600,7 @@ async function run() {
                 throw new Error(inputScriptPath + " is Invalid File [ Only TWIZX/twizx file is accepted ] ");
             } else {
                 console.log("\n\n\n Task Configuration ");
-                await deployReportTemplate();
+                await deployReportTemplate(false);
                 await singleFileExecutionThread();
                 await convertReportToZIP();
                 await resultCalc();
@@ -597,7 +608,20 @@ async function run() {
         }
         else if (input_targetType.toUpperCase() == 'FOLDERPATH') {
             inputFolderPath = inputScriptFolderPath;
-            const randomNumber = Math.floor(100000 + Math.random() * 900000)
+            const today = new Date();
+            let dd: any = today.getDate();
+            let mm: any = today.getMonth() + 1;
+            let yyyy = today.getFullYear();
+            var ss: any = today.getSeconds();
+            var min: any = today.getMinutes();
+            var hh: any = today.getHours();
+            dd = dd < 10 ? '0' + dd : dd;
+            mm = mm < 10 ? '0' + mm : mm;
+            hh = hh > 12 ? hh - 12 : hh;
+            hh = hh < 10 ? '0' + hh : hh;
+            min = min < 10 ? '0' + min : min;
+            ss = ss < 10 ? '0' + ss : ss;
+            const timeStamp = dd + mm + yyyy + "_" + hh + min + ss;
             let files = dir.files(inputFolderPath, { sync: true });
             const dirSize = files.length;
             await dirSize, files;
@@ -606,7 +630,7 @@ async function run() {
                 if (task.stats(files[i]).isFile() && files[i].toUpperCase().match(/\.TWIZX$/)) {
                     inputScriptPath = await files[i];
                     console.log("\n\n\n Task Configuration\n");
-                    await deployReportTemplate(randomNumber);
+                    await deployReportTemplate(timeStamp);
                     await singleFileExecutionThread();
                 } else {
                     console.log(" Inavaid files are : ", files[i]);

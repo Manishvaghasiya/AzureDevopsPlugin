@@ -1,17 +1,22 @@
 {
-    "id": "937e4568-749e-40d0-9778-78156ef133d6",
+    "id": "937e4568-749e-40d0-9778-78156ef133d3",
     "name": "TWExtension",
-    "friendlyName": "Testingwhiz extension",
+    "friendlyName": "Testingwhiz Plugin",
     "description": "build/release task to Run UI test with Testingwhiz",
-    "helpMarkDown": "",
+    "helpMarkDown": "Version: 1.1.1029. [More information](https://www.testing-whiz.com/integrations)",
     "category": "Utility",
     "author": "Cygnet Infotech",
     "version": {
-        "Major": 11,
+        "Major": 2,
         "Minor": 0,
         "Patch": 0
     },
     "instanceNameFormat": "TestingWhiz Plugin",
+    "groups": [{
+        "name": "rbtsettings",
+        "displayName": "RBT Enabled Execution",
+        "isExpanded": true
+    }],
     "inputs": [{
             "name": "serverURL",
             "type": "string",
@@ -138,46 +143,37 @@
             "helpMarkDown": "Send generated report to the mail"
         },
         {
-            "name": "rbt",
-            "type": "boolean",
-            "label": "RBT enabled execution",
-            "required": false,
-            "defaultValue": "false",
-            "helpMarkDown": "Prioritize test cases execution as per business requirement"
-        },
-        {
-            "name": "high",
+            "name": "rbtPriorityHigh",
             "type": "boolean",
             "label": "High",
-            "visibleRule": "rbt = true",
             "required": false,
             "defaultValue": "false",
-            "helpMarkDown": "High prioritize test cases execution as per business requirement"
+            "groupName": "rbtsettings",
+            "helpMarkDown": "Executes High prioritize test cases"
         },
         {
-            "name": "medium",
+            "name": "rbtPriorityMedium",
             "type": "boolean",
             "label": "Medium",
-            "visibleRule": "rbt = true",
             "required": false,
             "defaultValue": "true",
-            "helpMarkDown": "Medium mrioritize test cases execution as per business requirement"
+            "groupName": "rbtsettings",
+            "helpMarkDown": "Executes Medium mrioritize test cases"
         },
         {
-            "name": "low",
+            "name": "rbtPriorityLow",
             "type": "boolean",
             "label": "Low",
-            "visibleRule": "rbt = true",
             "required": false,
             "defaultValue": "false",
-            "helpMarkDown": "Low prioritize test cases execution as per business requirement"
+            "groupName": "rbtsettings",
+            "helpMarkDown": "Executes Low prioritize test cases"
         }
     ],
     "OutputVariables": [{
-            "name": "reportDeployPath",
-            "description": "storing generated report file path."
-        }
-    ],
+        "name": "reportDeployPath",
+        "description": "storing generated report file path."
+    }],
     "execution": {
         "Node": {
             "target": "index.js"
