@@ -119,17 +119,16 @@ async function run() {
             let dd: any = today.getDate();
             let mm: any = today.getMonth() + 1;
             let yyyy = today.getFullYear();
-            var ss: any = today.getSeconds();
-            var min: any = today.getMinutes();
-            var hh: any = today.getHours();
+            let ss: any = today.getSeconds();
+            let min: any = today.getMinutes();
+            let hh: any = today.getHours();
             dd = dd < 10 ? '0' + dd : dd;
             mm = mm < 10 ? '0' + mm : mm;
             hh = hh > 12 ? hh - 12 : hh;
             hh = hh < 10 ? '0' + hh : hh;
             min = min < 10 ? '0' + min : min;
             ss = ss < 10 ? '0' + ss : ss;
-            const timeStamp = dd + mm + yyyy + "_" + hh + min + ss;
-
+            const timeStamp = dd + '' + mm + '' + yyyy + '' + "_" + hh + '' + min + '' + ss + '';
             reportFolderExtraPath = folderTimeStamp ? "\\Reports_" + currentReleaseName + "_" + folderTimeStamp : '';
             reportDployPlace = reportDploy + reportFolderExtraPath + "\\Report_" + currentReleaseName + "_" + timeStamp;
             if (!fs.existsSync(TWreportTemplate)) {
@@ -446,8 +445,8 @@ async function run() {
 
                 if (isRBTEnable) {
                     rbtPriorityHigh = inputBooleanRBTPriorityHigh === 'true';
-                    rbtPriorityMedium = inputBooleanRBTPriorityLow === 'true';
-                    rbtPriorityLow = inputBooleanRBTPriorityMedium === 'true';
+                    rbtPriorityMedium = inputBooleanRBTPriorityMedium === 'true';
+                    rbtPriorityLow = inputBooleanRBTPriorityLow === 'true';
                 } else {
                     rbtPriorityHigh = false;
                     rbtPriorityMedium = false;
@@ -612,16 +611,16 @@ async function run() {
             let dd: any = today.getDate();
             let mm: any = today.getMonth() + 1;
             let yyyy = today.getFullYear();
-            var ss: any = today.getSeconds();
-            var min: any = today.getMinutes();
-            var hh: any = today.getHours();
+            let ss: any = today.getSeconds();
+            let min: any = today.getMinutes();
+            let hh: any = today.getHours();
             dd = dd < 10 ? '0' + dd : dd;
             mm = mm < 10 ? '0' + mm : mm;
             hh = hh > 12 ? hh - 12 : hh;
             hh = hh < 10 ? '0' + hh : hh;
             min = min < 10 ? '0' + min : min;
             ss = ss < 10 ? '0' + ss : ss;
-            const timeStamp = dd + mm + yyyy + "_" + hh + min + ss;
+            const timeStamp = dd + '' + mm + '' + yyyy + '' + "_" + hh + '' + min + '' + ss + '';
             let files = dir.files(inputFolderPath, { sync: true });
             const dirSize = files.length;
             await dirSize, files;

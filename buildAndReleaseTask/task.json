@@ -156,7 +156,7 @@
             "type": "boolean",
             "label": "Medium",
             "required": false,
-            "defaultValue": "true",
+            "defaultValue": "false",
             "groupName": "rbtsettings",
             "helpMarkDown": "Executes Medium mrioritize test cases"
         },
